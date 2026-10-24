@@ -1,0 +1,207 @@
+{
+  "source": "public/assets/wardrobe/incoming/3.jpg",
+  "grid": {
+    "columns": 8,
+    "rows": 4,
+    "cellWidth": 172,
+    "cellHeight": 192
+  },
+  "bodyCells": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31
+  ],
+  "layers": {
+    "arms": "player-arms.png",
+    "weapon": "player-weapon.png",
+    "muzzle": "player-muzzle.png"
+  },
+  "combat": {
+    "source": "public/assets/wardrobe/incoming/1.jpg",
+    "atlas": "player-combat-atlas.png",
+    "frameWidth": 176,
+    "frameHeight": 192,
+    "poses": {
+      "DOWN": {
+        "frame": 0,
+        "muzzle": {
+          "x": 158,
+          "y": 145
+        }
+      },
+      "DOWN_RIGHT": {
+        "frame": 1,
+        "muzzle": {
+          "x": 159,
+          "y": 139
+        }
+      },
+      "RIGHT": {
+        "frame": 11,
+        "muzzle": {
+          "x": 165,
+          "y": 106
+        }
+      },
+      "UP_RIGHT": {
+        "frame": 3,
+        "muzzle": {
+          "x": 158,
+          "y": 108
+        }
+      },
+      "LEFT": {
+        "frame": 8,
+        "muzzle": {
+          "x": 16,
+          "y": 121
+        }
+      }
+    },
+    "aimSectors": [
+      {
+        "name": "DOWN",
+        "minDeg": 67.5,
+        "maxDeg": 112.5,
+        "pose": "DOWN",
+        "mirror": false
+      },
+      {
+        "name": "DOWN_RIGHT",
+        "minDeg": 22.5,
+        "maxDeg": 67.5,
+        "pose": "DOWN_RIGHT",
+        "mirror": false
+      },
+      {
+        "name": "RIGHT",
+        "minDeg": -22.5,
+        "maxDeg": 22.5,
+        "pose": "RIGHT",
+        "mirror": false
+      },
+      {
+        "name": "UP_RIGHT",
+        "minDeg": -67.5,
+        "maxDeg": -22.5,
+        "pose": "UP_RIGHT",
+        "mirror": false
+      },
+      {
+        "name": "UP",
+        "minDeg": -112.5,
+        "maxDeg": -67.5,
+        "pose": "UP_RIGHT",
+        "mirror": false
+      },
+      {
+        "name": "UP_LEFT",
+        "minDeg": -157.5,
+        "maxDeg": -112.5,
+        "pose": "UP_RIGHT",
+        "mirror": true
+      },
+      {
+        "name": "LEFT",
+        "minDeg": 157.5,
+        "maxDeg": 180,
+        "pose": "LEFT",
+        "mirror": false
+      },
+      {
+        "name": "LEFT_NEGATIVE",
+        "minDeg": -180,
+        "maxDeg": -157.5,
+        "pose": "LEFT",
+        "mirror": false
+      },
+      {
+        "name": "DOWN_LEFT",
+        "minDeg": 112.5,
+        "maxDeg": 157.5,
+        "pose": "DOWN_RIGHT",
+        "mirror": true
+      }
+    ],
+    "states": {
+      "aim": 11,
+      "fire": 12,
+      "ready": 13,
+      "muzzleFlash": 14,
+      "recoil": 15
+    },
+    "grounding": {
+      "method": "alphaBottomPerFrame",
+      "visibleHeightTarget": 60,
+      "sourceUnits": "cellPixels"
+    },
+    "contract": "full-body authored combat presentation; alpha-bottom grounding; per-pose muzzle anchors; continuous projectile aim"
+  },
+  "rig": {
+    "body": {
+      "armsAnchor": {
+        "x": -7,
+        "y": -40,
+        "units": "bodyScale"
+      },
+      "weaponGripAnchor": {
+        "x": 7,
+        "y": -37,
+        "units": "bodyScale"
+      }
+    },
+    "weapon": {
+      "sourceWidth": 110,
+      "sourceHeight": 146,
+      "displayWidth": 50,
+      "grip": {
+        "x": 24.2,
+        "y": 75.92,
+        "units": "sourcePixels"
+      },
+      "muzzle": {
+        "x": 110.0,
+        "y": 75.92,
+        "units": "sourcePixels"
+      }
+    },
+    "muzzleLayer": {
+      "sourceWidth": 113,
+      "sourceHeight": 147,
+      "origin": {
+        "x": 0,
+        "y": 0.5
+      }
+    }
+  },
+  "note": "Generated production candidate. Movement uses the authored armed directional frames from 3.jpg; weapon-bearing presentation uses authored integrated combat frames from 1.jpg. Extracted arms/weapon/muzzle crops remain audit outputs and are not rendered as runtime overlays."
+}

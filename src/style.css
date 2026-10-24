@@ -1,0 +1,329 @@
+:root {
+  --night: #070b1d;
+  --line: rgba(169,184,214,.22);
+  --muted: #a9b8d6;
+  --teal: #55d6c2;
+  --ink: #f4f7ff;
+}
+
+html,
+body,
+#app {
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  background: #16120f;
+  overflow: hidden;
+}
+
+body {
+  overflow: hidden;
+  background: #16120f;
+  font-family: Arial, sans-serif;
+  overscroll-behavior: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+#app {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100dvh;
+  min-height: 180px;
+  overflow: hidden;
+  background: #16120f;
+}
+
+canvas {
+  display: block;
+  width: 100vw;
+  height: 100dvh;
+  margin: 0;
+  padding: 0;
+  touch-action: none;
+}
+
+#ahg-name-input {
+  position: absolute;
+  z-index: 1100;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 8px 12px;
+  border: 0;
+  outline: none;
+  border-radius: 2px;
+  background: transparent;
+  color: #30251e;
+  font-family: monospace;
+  font-weight: 400;
+  line-height: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  caret-color: #30251e;
+  -webkit-user-select: text;
+  user-select: text;
+  touch-action: manipulation;
+}
+
+#ahg-name-input::selection {
+  background: rgba(98, 73, 55, 0.2);
+}
+
+#ahg-touch-controls {
+  position: fixed;
+  inset: auto 0 0;
+  z-index: 1000;
+  width: 100vw;
+  height: clamp(104px, 16vh, 132px);
+  padding: 0 max(14px, env(safe-area-inset-left)) max(12px, env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-right));
+  box-sizing: border-box;
+  pointer-events: none;
+  touch-action: none;
+  transition: opacity 140ms ease;
+}
+#ahg-touch-controls.is-hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+/* Phaser modal/gamebook UI is rendered inside the canvas. DOM touch controls sit above
+   the canvas, so action controls must yield while an in-game overlay owns the screen.
+   The BACK escape handle remains available above the overlay. */
+#ahg-touch-controls.is-overlay .ahg-joystick,
+#ahg-touch-controls.is-overlay .ahg-actions,
+#ahg-touch-controls.is-overlay .ahg-touch-hint {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+#ahg-touch-controls.is-overlay .ahg-back-button {
+  display: block;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.ahg-joystick {
+  position: absolute; left: max(16px, env(safe-area-inset-left)); bottom: max(10px, env(safe-area-inset-bottom));
+  width: clamp(88px, 24vw, 122px); height: clamp(88px, 24vw, 122px);
+  border: 2px solid rgba(240,223,182,.78); border-radius: 50%; background: rgba(55,43,34,.74);
+  box-shadow: inset 0 0 0 10px rgba(231,214,164,.08), 0 5px 16px rgba(30,23,18,.28);
+  pointer-events: auto; touch-action: none; -webkit-tap-highlight-color: transparent;
+}
+.ahg-joystick::after { content: ""; position:absolute; inset:15%; border:1px solid rgba(240,223,182,.22); border-radius:50%; pointer-events:none; }
+.ahg-joystick-knob {
+  position:absolute; left:50%; top:50%; width:clamp(42px,11vw,58px); height:clamp(42px,11vw,58px);
+  margin:calc(clamp(42px,11vw,58px)/-2) 0 0 calc(clamp(42px,11vw,58px)/-2);
+  border:2px solid rgba(255,244,212,.96); border-radius:50%; background:rgba(31,107,104,.94);
+  box-shadow:0 4px 0 rgba(44,36,29,.58); transform:translate3d(0,0,0); pointer-events:none;
+}
+.ahg-joystick-label {
+  position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+  color:rgba(255,244,212,.48); font:700 clamp(8px,2.2vw,10px)/1 monospace; letter-spacing:1px; pointer-events:none;
+}
+.ahg-actions {
+  position:absolute; right:max(14px,env(safe-area-inset-right)); bottom:max(14px,env(safe-area-inset-bottom));
+  display:flex; align-items:flex-end; gap:clamp(8px,2vw,14px); pointer-events:none;
+}
+.ahg-action-button {
+  width:clamp(64px,17vw,82px); height:clamp(64px,17vw,82px); padding:0;
+  border:2px solid rgba(240,223,182,.92); border-radius:50%; background:rgba(55,43,34,.88);
+  box-shadow:0 5px 0 rgba(44,36,29,.62); color:#fff4d4;
+  font:700 clamp(10px,2.8vw,13px)/1.1 monospace; letter-spacing:.6px;
+  -webkit-tap-highlight-color:transparent; pointer-events:auto; touch-action:manipulation;
+}
+.ahg-action-button span { display:inline-block; max-width:68px; }
+.ahg-action-button.is-pressed,.ahg-action-button:active { transform:translateY(3px) scale(.98); background:rgba(31,107,104,.96); box-shadow:0 2px 0 rgba(44,36,29,.62); }
+.ahg-touch-hint {
+  position:absolute; left:clamp(126px,30vw,160px); bottom:max(16px,env(safe-area-inset-bottom));
+  color:rgba(255,244,212,.58); font:700 clamp(8px,2vw,10px)/1 monospace; letter-spacing:1.3px; pointer-events:none;
+}
+@media (pointer: coarse) { body { -webkit-touch-callout:none; } }
+@media (orientation: portrait) { #ahg-touch-controls { height:clamp(112px,17vh,140px); } .ahg-touch-hint { display:none; } }
+@media (max-width:420px) { #ahg-touch-controls { height:112px; } .ahg-actions { right:max(9px,env(safe-area-inset-right)); gap:7px; } .ahg-joystick { left:max(9px,env(safe-area-inset-left)); } }
+
+
+.ahg-back-button {
+  position: absolute;
+  top: max(12px, env(safe-area-inset-top));
+  left: max(12px, env(safe-area-inset-left));
+  min-width: 52px;
+  min-height: 52px;
+  padding: 0 14px;
+  border: 2px solid rgba(240,223,182,.92);
+  border-radius: 14px;
+  background: rgba(55,43,34,.92);
+  box-shadow: 0 4px 0 rgba(44,36,29,.62);
+  color: #fff4d4;
+  font: 700 13px/1 monospace;
+  letter-spacing: .7px;
+  pointer-events: auto;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.ahg-back-button:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 rgba(44,36,29,.62);
+}
+.ahg-back-button.is-hidden { display: none; }
+.ahg-overlay-backdrop {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.ahg-overlay-backdrop .ahg-back-button { pointer-events: auto; }
+
+
+/* Full-viewport game surface: Phaser RESIZE owns the actual canvas dimensions. */
+#app > canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Keep native mobile form controls large enough to operate comfortably. */
+#ahg-name-input {
+  min-height: 44px;
+}
+
+/* Keyboard focus should remain visible without breaking the game aesthetic. */
+.ahg-action-button:focus-visible,
+.ahg-back-button:focus-visible {
+  outline: 3px solid #f5e7c4;
+  outline-offset: 3px;
+}
+
+/* Very short screens: reduce decoration before reducing the actual controls. */
+@media (max-height: 520px) {
+  #ahg-touch-controls { height: 92px; }
+  .ahg-joystick { width: 82px; height: 82px; }
+  .ahg-action-button { width: 60px; height: 60px; }
+}
+
+
+/* Native name input is the single visual text field on touch devices. */
+#ahg-name-input { font-family: monospace; }
+
+
+.ahg-pwa-notice {
+  position: fixed;
+  z-index: 900;
+  top: max(12px, env(safe-area-inset-top));
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: min(92vw, 560px);
+  padding: 8px 10px 8px 14px;
+  border: 1px solid rgba(240,223,182,.5);
+  border-radius: 999px;
+  background: rgba(55,43,34,.94);
+  box-shadow: 0 5px 18px rgba(30,23,18,.3);
+  color: #fff4d4;
+  font: 700 9px/1 monospace;
+  letter-spacing: .7px;
+  pointer-events: auto;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.ahg-pwa-notice button {
+  min-width: 48px;
+  min-height: 40px;
+  padding: 7px 11px;
+  border: 1px solid rgba(240,223,182,.65);
+  border-radius: 999px;
+  background: #2f7775;
+  color: #fff4d4;
+  font: 700 9px/1 monospace;
+  letter-spacing: .6px;
+  touch-action: manipulation;
+}
+.ahg-pwa-notice button:last-child {
+  min-width: 40px;
+  padding-inline: 8px;
+  background: transparent;
+  border-color: transparent;
+  font-size: 18px;
+}
+.ahg-pwa-notice button:disabled { opacity: .65; }
+.ahg-pwa-install { top: auto; bottom: max(16px, env(safe-area-inset-bottom)); }
+@media (max-width: 520px) {
+  .ahg-pwa-notice { max-width: calc(100vw - 24px); font-size: 8px; }
+  .ahg-pwa-notice span { max-width: 52vw; }
+}
+
+
+/* Game library entry screen */
+.game-menu {
+  position: fixed;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  inset: 0;
+  z-index: 200;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 78% 18%, rgba(85,214,194,.10), transparent 26rem),
+    radial-gradient(circle at 18% 80%, rgba(226,189,103,.07), transparent 24rem),
+    var(--night);
+}
+.game-menu-header,
+.game-menu-footer {
+  color: var(--ink);
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.game-menu-header { padding: 26px 0; border-bottom: 1px solid var(--line); }
+.menu-label,
+.game-menu-footer {
+  color: var(--muted);
+  font: 800 9px/1 monospace;
+  letter-spacing: 1.5px;
+}
+.game-menu-main { width: min(1180px, calc(100% - 40px)); margin: auto; padding: 9vh 0 10vh; }
+.menu-intro { max-width: 720px; }
+.menu-intro h1 { color: var(--ink); margin: 18px 0 14px; font-size: clamp(44px, 7vw, 82px); line-height: .95; letter-spacing: -.055em; }
+.menu-intro > p:last-child { max-width: 570px; margin: 0; color: var(--muted); font-size: clamp(15px, 2vw, 18px); line-height: 1.65; }
+.menu-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 52px; }
+.menu-card { display: grid; grid-template-columns: 150px minmax(0, 1fr); border: 1px solid var(--line); background: rgba(16,23,45,.72); overflow: hidden; }
+.menu-card-art { min-height: 270px; display: flex; align-items: flex-end; padding: 18px; background: radial-gradient(circle at 72% 30%, rgba(85,214,194,.20), transparent 35%), linear-gradient(145deg, #111d3d, #07101e); }
+.menu-card-art span { color: rgba(244,247,255,.16); font: 800 64px/1 monospace; }
+.menu-card-content { color: var(--ink); padding: 28px; display: flex; flex-direction: column; justify-content: center; }
+.menu-card-meta { display: flex; justify-content: space-between; gap: 12px; color: var(--teal); font: 800 8px/1.3 monospace; letter-spacing: 1.1px; }
+.menu-card-meta span:last-child { color: rgba(169,184,214,.7); }
+.menu-card h2 { color: var(--ink); margin: 18px 0 10px; font-size: clamp(30px, 4vw, 42px); letter-spacing: -.04em; }
+.menu-card p { margin: 0; color: var(--muted); line-height: 1.6; font-size: 14px; }
+.menu-play { color: #07151a; align-self: flex-start; margin-top: 26px; min-height: 48px; padding: 0 18px; border: 1px solid var(--teal); background: var(--teal); color: #07151a; cursor: pointer; font: 800 10px/1 monospace; letter-spacing: 1.1px; }
+.menu-play span { margin-left: 10px; }
+.menu-disabled { margin-top: 26px; color: rgba(169,184,214,.55); font: 800 9px/1 monospace; letter-spacing: 1px; }
+.game-menu-footer { padding: 18px 0; border-top: 1px solid var(--line); }
+.ahg-fallback { min-height: 100svh; display: grid; place-content: center; gap: 18px; text-align: center; background: var(--night); color: var(--ink); font: 800 12px/1.5 monospace; }
+.ahg-fallback button { min-height: 48px; border: 1px solid var(--teal); background: var(--teal); color: #07151a; cursor: pointer; font: 800 10px/1 monospace; letter-spacing: 1px; }
+@media (max-width: 700px) {
+  .game-menu-header, .game-menu-footer, .game-menu-main { width: min(100% - 28px, 1180px); }
+  .game-menu-header { padding: 18px 0; }
+  .menu-grid { grid-template-columns: 1fr; }
+  .menu-card { grid-template-columns: 1fr; }
+  .menu-card-art { min-height: 150px; }
+  .menu-card-content { padding: 22px; }
+}
