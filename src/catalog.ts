@@ -246,6 +246,8 @@ export function renderCatalog() {
     }
     const profile: FarmProfile = { farmName, createdAt: Date.now(), updatedAt: Date.now() };
     try {
+      // Starting a genuinely new farm must not inherit an old prototype dog's saved needs.
+      localStorage.removeItem('admin-hub-games:paws-world-v1');
       localStorage.setItem(FARM_PROFILE_KEY, JSON.stringify(profile));
     } catch {
       if (flow) flow.insertAdjacentHTML('beforeend', '<p role="alert" class="farm-flow-error">This browser could not save the farm name. You can still retry after checking device storage settings.</p>');
