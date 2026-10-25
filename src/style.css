@@ -327,3 +327,11 @@ canvas {
   .menu-card-art { min-height: 150px; }
   .menu-card-content { padding: 22px; }
 }
+
+
+/* Choppies PWA install card: native prompt is still only invoked by the user's tap. */
+.ahg-pwa-install{top:auto;left:auto;right:max(14px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));transform:none;width:min(350px,calc(100vw - 28px));max-width:none;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;padding:13px;border:1px solid #f5d95f;background:#fffdf4;color:#24432c;border-radius:18px;box-shadow:0 14px 40px #183b2940;font:600 12px system-ui,sans-serif;letter-spacing:normal}
+.ahg-pwa-brand{display:flex;align-items:center;gap:10px;min-width:0}.ahg-pwa-mark{display:grid;place-items:center;flex:0 0 40px;width:40px;height:40px;border-radius:12px;background:#e52f35;color:#fff;font-size:24px;font-weight:1000;letter-spacing:-2px}.ahg-pwa-brand-copy{display:block;min-width:0}.ahg-pwa-brand-copy strong,.ahg-pwa-brand-copy small{display:block;max-width:none;color:#24432c;letter-spacing:.1em}.ahg-pwa-brand-copy strong{font-size:12px;font-weight:1000}.ahg-pwa-brand-copy small{margin-top:4px;font-size:9px;font-weight:800;letter-spacing:.06em}
+.ahg-pwa-install .ahg-pwa-install-action{grid-column:1/-1;width:100%;min-height:44px;border:0;border-radius:11px;background:#e52f35;color:white;font:900 12px system-ui,sans-serif;letter-spacing:.08em}.ahg-pwa-install .ahg-pwa-close{position:absolute;top:7px;right:7px;min-width:30px;min-height:30px;border:1px solid #d7dfd0;border-radius:50%;background:#fff;color:#24432c;font-size:18px;line-height:1;padding:0}
+.ahg-pwa-reopen{position:fixed;z-index:900;right:max(14px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));min-height:42px;padding:0 15px;border:1px solid #f5d95f;border-radius:999px;background:#e52f35;color:white;box-shadow:0 5px 18px #183b2940;font:900 10px system-ui,sans-serif;letter-spacing:.06em;touch-action:manipulation}
+@media(max-width:520px){.ahg-pwa-install{left:14px;right:14px;bottom:max(14px,env(safe-area-inset-bottom));width:auto}.ahg-pwa-brand-copy small{font-size:8px}}
