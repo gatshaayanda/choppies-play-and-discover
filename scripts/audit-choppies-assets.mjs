@@ -16,7 +16,7 @@ function walk(dir) {
     return item.isDirectory() ? walk(full) : [full];
   });
 }
-function relative(file) { return path.relative(root, file).replaceAll('\\\\', '/'); }
+function relative(file) { return path.relative(root, file).split(path.sep).join('/'); }
 function hashFile(file) { return crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex'); }
 function zipEntries(buffer) {
   let eocd = -1;
@@ -35,7 +35,7 @@ function zipEntries(buffer) {
     const nameLength = buffer.readUInt16LE(cursor + 28);
     const extraLength = buffer.readUInt16LE(cursor + 30);
     const commentLength = buffer.readUInt16LE(cursor + 32);
-    const name = buffer.subarray(cursor + 46, cursor + 46 + nameLength).toString('utf8').replaceAll('\\\\', '/');
+    const name = buffer.subarray(cursor + 46, cursor + 46 + nameLength).toString('utf8').replace(/\\/g, '/');
     entries.push({ name, size, method, directory: name.endsWith('/') });
     cursor += 46 + nameLength + extraLength + commentLength;
   }
@@ -49,7 +49,7 @@ function imageDimensions(file) {
     if (ext === '.gif' && b.length >= 10) return { width: b.readUInt16LE(6), height: b.readUInt16LE(8) };
     if (ext === '.svg') {
       const head = b.subarray(0, 4096).toString('utf8');
-      const w = head.match(/\\bwidth=["']([0-9.]+)/i), h = head.match(/\\bheight=["']([0-9.]+)/i), view = head.match(/viewBox=["'][^"']*?([0-9.]+)[ ,]+([0-9.]+)["']/i);
+      const w = head.match(/\bwidth=["']([0-9.]+)/i), h = head.match(/\bheight=["']([0-9.]+)/i), view = head.match(/viewBox=["'][^"']*?([0-9.]+)[ ,]+([0-9.]+)["']/i);
       if (w && h) return { width: Number(w[1]), height: Number(h[1]) };
       if (view) return { width: Number(view[1]), height: Number(view[2]) };
     }
@@ -75,7 +75,7 @@ function modelMetadata(file) {
       const b = fs.readFileSync(file);
       if (b.toString('ascii', 0, 4) !== 'glTF') return null;
       const jsonLength = b.readUInt32LE(12);
-      if (b.toUInt32LE(16) !== 0x4e4f534a) return null;
+      if (b.readUInt32LE(16) !== 0x4e4f534a) return null;
       json = JSON.parse(b.toString('utf8', 20, 20 + jsonLength).replace(/\\u0000+$/g, '').trim());
     } else return null;
     return { version: json.asset?.version, meshes: json.meshes?.length || 0, materials: json.materials?.length || 0, nodes: json.nodes?.length || 0, animations: json.animations?.length || 0, images: json.images?.length || 0, textures: json.textures?.length || 0 };
@@ -122,7 +122,7 @@ const report = {
 };
 const destination = path.join(root, 'docs/CHOPPIES-ASSET-INVENTORY.json');
 fs.mkdirSync(path.dirname(destination), { recursive: true });
-fs.writeFileSync(destination, JSON.stringify(report, null, 2) + '\\n');
+fs.writeFileSync(destination, JSON.stringify(report, null, 2) + '\n');
 console.log(`Inventoried ${archives.length} source archives and ${runtime.length} extracted runtime assets.`);
 console.log(`Archive formats: ${JSON.stringify(report.sourceExtensions)}`);
 console.log(`Runtime formats: ${JSON.stringify(report.runtimeExtensions)}`);
