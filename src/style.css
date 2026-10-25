@@ -574,3 +574,12 @@ html, body, #app { background: #c8102e; }
   .farm-flow { padding:30px; }
   .farm-preview-guide { grid-template-columns:repeat(3,minmax(0,1fr)); }
 }
+
+
+/* Brand hierarchy: Choppies leads; Play & Discover is the product descriptor. */
+.brand-wordmark { gap:5px; font-size:20px; line-height:1; letter-spacing:1.2px; }
+.brand-wordmark b { font-size:10px; line-height:1.2; letter-spacing:1.8px; }
+@media (max-width: 520px) {
+  .brand-wordmark { font-size:18px; }
+  .brand-wordmark b { font-size:9px; letter-spacing:1.4px; }
+}
