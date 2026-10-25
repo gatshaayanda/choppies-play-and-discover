@@ -102,7 +102,7 @@ export class PublisherIntroScene extends Phaser.Scene {
     const titleSize = Math.max(30, Math.min(60, Math.min(width, height) * 0.10));
     const presentsSize = Math.max(15, Math.min(25, Math.min(width, height) * 0.04));
 
-    const title = this.add.text(width / 2, height * 0.455, 'ADMIN HUB GAMES', {
+    const title = this.add.text(width / 2, height * 0.455, 'CHOPPIES PLAY & DISCOVER', {
       fontFamily: 'monospace',
       fontSize: `${titleSize}px`,
       fontStyle: 'bold',
