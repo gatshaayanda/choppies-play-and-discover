@@ -155,8 +155,8 @@ export function renderCatalog() {
       <h2 id="farm-flow-heading">${profile ? 'Welcome back to the farm.' : 'Your farm adventure starts here.'}</h2>
       <p class="farm-flow-copy">${profile ? `Your saved farm, <strong>${escapeHtml(profile.farmName)}</strong>, is on this device.` : 'Start a new farm, give it a name, and explore the first walkable farm preview.'}</p>
       <div class="farm-flow-actions">
-        <button class="menu-cta" type="button" data-farm-action="new">New farm <span aria-hidden="true">→</span></button>
-        ${profile ? '<button class="menu-cta menu-cta--secondary" type="button" data-farm-action="continue">Continue saved farm <span aria-hidden="true">↗</span></button>' : ''}
+        <button class="menu-cta" type="button" data-farm-action="new">New game <span aria-hidden="true">→</span></button>
+        ${profile ? '<button class="menu-cta menu-cta--secondary" type="button" data-farm-action="continue">Continue saved game <span aria-hidden="true">↗</span></button>' : ''}
         <button class="farm-back" type="button" data-farm-action="back">Back to discovery menu</button>
       </div>
     `;
