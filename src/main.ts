@@ -7,6 +7,7 @@ async function startExperience() {
       { registerPwa },
       { BootScene },
       { PublisherIntroScene },
+      { LivingWorldGameScene },
     ] = await Promise.all([
       import('phaser'),
       import('./pwa'),
@@ -35,7 +36,7 @@ async function startExperience() {
         min: { width: 320, height: 180 },
         max: { width: 0, height: 0 },
       },
-      scene: [BootScene, PublisherIntroScene],
+      scene: [BootScene, PublisherIntroScene, LivingWorldGameScene],
     };
 
     const game = new Phaser.Game(config);
