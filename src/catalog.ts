@@ -12,7 +12,7 @@ const games: GameMenuItem[] = [
   {
     id: 'hall',
     title: 'HALL',
-    description: 'The Admin Hub Games world. Explore, read, leave something behind and return.',
+    description: 'Choppies Play & Discover — a growing collection of playful learning worlds.',
     status: 'PLAY NOW',
     playable: true,
   },
@@ -60,8 +60,8 @@ export function renderCatalog(onPlay: (gameId: GameMenuItem['id']) => void) {
     <main class="game-menu" aria-labelledby="game-menu-title">
       <header class="game-menu-header">
         <div class="brand">
-          <span class="brand-mark">AH</span>
-          <span>ADMIN HUB <b>GAMES</b></span>
+          <span class="brand-mark">C</span>
+          <span>CHOPPIES <b>PLAY & DISCOVER</b></span>
         </div>
         <span class="menu-label">GAME LIBRARY</span>
       </header>
@@ -90,7 +90,7 @@ export function renderCatalog(onPlay: (gameId: GameMenuItem['id']) => void) {
 
       <footer class="game-menu-footer">
         <span>CHOPPIES · PLAY & DISCOVER</span>
-        <span>2 RELEASED · 3 IN DEVELOPMENT</span>
+        <span>EXPLORE · PLAY · GROW</span>
       </footer>
     </main>
   `);
