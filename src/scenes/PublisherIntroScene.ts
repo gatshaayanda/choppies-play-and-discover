@@ -16,7 +16,7 @@ export class PublisherIntroScene extends Phaser.Scene {
     adminHubAudio.start();
 
     const { width, height } = this.scale;
-    this.cameras.main.setBackgroundColor('#070b1d');
+    this.cameras.main.setBackgroundColor('#1e402b');
     this.drawWorld(width, height);
     this.scale.on(Phaser.Scale.Events.RESIZE, this.handleResize, this);
 
@@ -25,11 +25,11 @@ export class PublisherIntroScene extends Phaser.Scene {
     player.setDepth(20);
     shadow.setDepth(19);
 
-    const ambientBrand = this.add.text(width * 0.075, height * 0.085, 'ADMIN HUB GAMES', {
+    const ambientBrand = this.add.text(width * 0.075, height * 0.085, 'CHOPPIES PLAY & DISCOVER', {
       fontFamily: 'monospace',
       fontSize: '12px',
       fontStyle: 'bold',
-      color: '#a9b8d6',
+      color: '#f7d84d',
       letterSpacing: 2.5,
     }).setDepth(30);
 
@@ -41,7 +41,7 @@ export class PublisherIntroScene extends Phaser.Scene {
     this.input.on('pointerdown', skip);
     this.input.keyboard?.on('keydown', skip);
 
-    const fade = this.add.rectangle(0, 0, width, height, 0x070b1d, 1)
+    const fade = this.add.rectangle(0, 0, width, height, 0x1e402b, 1)
       .setOrigin(0)
       .setDepth(100);
 
@@ -94,7 +94,7 @@ export class PublisherIntroScene extends Phaser.Scene {
     const panelWidth = Math.min(width * 0.82, 720);
     const panelHeight = Math.min(height * 0.38, 210);
     const panel = this.add.rectangle(width / 2, height * 0.48, panelWidth, panelHeight, 0x10172d, 0.92)
-      .setStrokeStyle(Math.max(2, Math.min(width, height) * 0.004), 0x55d6c2, 0.95)
+      .setStrokeStyle(Math.max(2, Math.min(width, height) * 0.004), 0xf7d84d, 0.95)
       .setDepth(81)
       .setAlpha(0)
       .setScale(0.94);
