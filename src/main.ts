@@ -1,10 +1,14 @@
 import './style.css';
 import './mobile-controls';
+import { registerPwa } from './pwa';
+
+// Capture beforeinstallprompt before the game dynamically loads its scenes.
+// Browsers may dispatch it during startup; attaching the listener after Promise.all loses it.
+registerPwa();
 function startHall() {
   const boot = async () => {
     const [
       { default: Phaser },
-      { registerPwa },
       { BootScene },
       { PublisherIntroScene },
       { NameEntryScene },
@@ -26,7 +30,6 @@ function startHall() {
       { LivingWorldGameScene },
     ] = await Promise.all([
       import('phaser'),
-      import('./pwa'),
       import('./scenes/BootScene'),
       import('./scenes/PublisherIntroScene'),
       import('./scenes/NameEntryScene'),
@@ -48,7 +51,6 @@ function startHall() {
       import('./scenes/LivingWorldGameScene'),
     ]);
 
-    registerPwa();
 
     const config: Phaser.Types.Core.GameConfig = {
       type: (window.matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0)
