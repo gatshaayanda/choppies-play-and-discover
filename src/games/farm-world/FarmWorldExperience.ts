@@ -38,6 +38,8 @@ export class FarmWorldExperience {
   private stickZ = 0;
   private crops: THREE.Object3D[] = [];
   private animals: THREE.Group[] = [];
+  private horseModel?: THREE.Object3D;
+  private mounted = false;
   private score = 0;
   private watered = 0;
   private hint = 'Explore the farm. Walk to a crop row and tap WATER or HARVEST.';
@@ -65,6 +67,7 @@ export class FarmWorldExperience {
     this.loadModel('environment/farm_sign.glb', [0,0,9], [1.4,1.4,1.4]);
     for (let i=0;i<4;i++) this.loadModel(i%2?'environment/crop_row_carrots.glb':'environment/crop_row_cabbage.glb', [-5+i*3.2,0,1], [.9,.9,.9], true);
     for (const [i,name] of ['cow.glb','sheep.glb','chick.glb','goat.glb'].entries()) this.loadModel('animals/'+name, [-5+i*3.4,0,-5+(i%2)*2], [.9,.9,.9], false, true);
+    this.loadHorse([3,0,6]);
     this.animate();
   }
 
@@ -88,7 +91,7 @@ export class FarmWorldExperience {
     this.loader.load(FARM+path,(gltf)=>{if(this.disposed)return;const o=gltf.scene;o.position.set(...pos);o.scale.set(...scale);o.traverse((n:THREE.Object3D)=>{if((n as THREE.Mesh).isMesh){(n as THREE.Mesh).castShadow=true;(n as THREE.Mesh).receiveShadow=true;}});this.scene.add(o);if(crop)this.crops.push(o);if(animal)this.animals.push(o as THREE.Group);},undefined,()=>{});
   }
   private buildHud(){
-    this.root.insertAdjacentHTML('beforeend',`<div class="cfw-hud"><div class="cfw-brand"><b>CHOPPIES FARM WORLD</b><small>GROW · CARE · DISCOVER</small></div><div class="cfw-task" id="cfw-task">Harvest basket: 0 · Crops watered: 0</div><div class="cfw-hint" id="cfw-hint"></div><div class="cfw-bottom"><div class="cfw-joystick" aria-label="Touch joystick: drag to move"><div class="cfw-knob"></div></div><div class="cfw-actions"><button class="cfw-btn primary" data-action="water">WATER CROPS</button><button class="cfw-btn" data-action="harvest">HARVEST</button><button class="cfw-btn" data-action="feed">FEED ANIMALS</button><button class="cfw-btn" data-action="back">BACK TO GAMES</button></div></div></div>`);
+    this.root.insertAdjacentHTML('beforeend',`<div class="cfw-hud"><div class="cfw-brand"><b>CHOPPIES FARM WORLD</b><small>GROW · CARE · DISCOVER</small></div><div class="cfw-task" id="cfw-task">Harvest basket: 0 · Crops watered: 0</div><div class="cfw-hint" id="cfw-hint"></div><div class="cfw-bottom"><div class="cfw-joystick" aria-label="Touch joystick: drag to move"><div class="cfw-knob"></div></div><div class="cfw-actions"><button class="cfw-btn primary" data-action="water">WATER CROPS</button><button class="cfw-btn" data-action="harvest">HARVEST</button><button class="cfw-btn" data-action="feed">FEED ANIMALS</button><button class="cfw-btn" data-action="ride">RIDE HORSE</button><button class="cfw-btn" data-action="back">BACK TO GAMES</button></div></div></div>`);
     this.taskText=this.root.querySelector('#cfw-task')||undefined;this.hintText=this.root.querySelector('#cfw-hint')||undefined;this.showHint(this.hint);
     const stick=this.root.querySelector<HTMLDivElement>('.cfw-joystick');
     const knob=stick?.querySelector<HTMLDivElement>('.cfw-knob');
@@ -100,7 +103,15 @@ export class FarmWorldExperience {
     stick?.addEventListener('pointerup',resetStick);stick?.addEventListener('pointercancel',resetStick);stick?.addEventListener('lostpointercapture',resetStick);
     this.root.querySelectorAll<HTMLButtonElement>('[data-action]').forEach(b=>b.addEventListener('click',()=>{const a=b.dataset.action;if(a==='back'){window.location.href='/';return;}this.action(a||'');}));
   }
+  private loadHorse(pos:[number,number,number]){this.loader.load(FARM+'animals/horse.glb',(gltf)=>{if(this.disposed)return;const horse=gltf.scene;horse.position.set(...pos);horse.scale.set(.9,.9,.9);horse.traverse((n:THREE.Object3D)=>{if((n as THREE.Mesh).isMesh){(n as THREE.Mesh).castShadow=true;(n as THREE.Mesh).receiveShadow=true;}});this.horseModel=horse;this.scene.add(horse);},undefined,()=>{this.showHint('The horse asset could not load. Check the farm animal assets.');});}
   private action(action:string){
+    if(action==='ride'){
+      const horse=this.horseModel;
+      if(this.mounted&&horse){this.scene.attach(horse);this.player.position.y=0;this.mounted=false;this.showHint('You dismounted. Walk around the farm or ride again.');return;}
+      if(!horse){this.showHint('The horse is still arriving. Try again in a moment.');return;}
+      if(horse.position.distanceTo(this.player.position)>6){this.showHint('Walk over to the horse before tapping RIDE HORSE.');return;}
+      this.player.add(horse);horse.position.set(0,-.48,0);horse.scale.set(.9,.9,.9);this.player.position.y=.55;this.mounted=true;this.showHint('You are riding the farm horse! Use the joystick or arrow keys to explore.');return;
+    }
     const nearCrop=this.crops.some(c=>c.position.distanceTo(this.player.position)<6);
     const nearAnimal=this.animals.some(a=>a.position.distanceTo(this.player.position)<6);
     if(action==='water'){if(!nearCrop){this.showHint('Walk closer to the crop rows first.');return;}this.watered++;this.score+=5;this.showHint('Nice watering! Healthy crops help the farm grow. +5 points');}
