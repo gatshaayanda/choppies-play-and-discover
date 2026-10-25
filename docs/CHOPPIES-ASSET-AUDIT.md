@@ -57,3 +57,40 @@ Reuse lesson: the car owns its world position and velocity; track projection is 
 4. Do not invent/draw substitute geometric characters, food or vehicles when a pack lacks the required asset. Reject the concept or find a properly licensed matching asset.
 5. Run `npm run assets:audit` to inventory source archives and all extracted runtime files, including image dimensions and model metadata where readable. ZIP/JAR member listings and licence/readme candidates are catalogued; RAR/7z still require a compatible archive utility. Then open and visually inspect shortlisted art. Filename inventory alone cannot determine visual quality, animation correctness or licence permission.
 6. Keep imported ZIP/RAR/7z files out of `public/`; never make customers download the source library with the app.
+
+
+## Current implementation reality check — 25 October 2026
+
+This section records a source-code inspection of the current `main` branch after the farm-first product direction was clarified. It is not a visual asset review or phone QA.
+
+### What actually exists
+
+- **The customer-facing entry is still an intro and concept menu.** `src/main.ts` starts only `BootScene` and `PublisherIntroScene`. The publisher intro renders `src/catalog.ts`, whose three cards explicitly say the directions are under review and are not launchable games. There is currently no farm-first entry choice or direct mini-game launcher in that customer-facing menu.
+- **A farm-themed prototype exists, but it is not the intended Choppies flagship.** `LivingWorldGameScene` instantiates `PawsWorldExperience`. That is an inherited 2D canvas prototype with a single named dog, procedurally drawn farm scenery and animals, movement controls, a fixed herd destination, and a rabbit-chase task. It does not yet provide the requested persistent open-world farm, crop lifecycle, orchard sorting, coyote/Splatter defence, cart racing, pumpkin competition, cookhouse competition, or farm-to-order loop.
+- **The current Paws World visuals are mostly procedural drawings.** Its active canvas loads `public/assets/paws-world/dog-brown.png` for the player dog; sheep, goats, rabbits, trees, pen, barn, water and feed visuals are drawn in code. This is a prototype implementation, not the required asset-led visual quality. Do not expand this approach into the Choppies flagship.
+- **A separate Three.js farm/dog prototype is present in source but is not the active renderer.** `src/games/living-world/LivingWorldExperience.ts` uses Three.js and GLTFLoader, but `LivingWorldGameScene` does not instantiate it. That prototype loads only six selected GLBs (sheep, goat, dog house, water trough, fence gate and apple tree) and builds much of its environment and dog characters from primitive geometry. It is a reference for loading GLBs and camera/control experiments, not a finished open-world implementation.
+- **The simulation core is a useful reusable foundation, but it is not yet connected to the active play loop.** `src/games/living-world/simulation.ts`, `types.ts`, `save.ts` and their Vitest tests model a versioned local world with goats, plant patches, water, seasons and bounded offline-time progression. The scene advances and saves that model, but the active Paws World canvas keeps its own separate local dog/animal state. The two states are not integrated into one consistent farm simulation.
+- **The requested Choppies mini-games are not implemented.** Repository code search found no coyote/Splatter or rotten-tomato gameplay, Fruit Match, Shopping Cart Racing, pumpkin contest, or cooking competition implementation. These remain product direction, not available game modes. Vula's Car Wash is a separate mechanics reference, not a Choppies game dependency.
+- **The intro/setup scenes are not part of the current entry path.** `LivingWorldIntroScene` and `LivingWorldSetupScene` exist as source files, but the current configured scene list does not register them. They cannot be treated as working user flows yet.
+
+### Asset evidence currently available
+
+- The tree contains **54 public GLB models** under the inherited farm/living-world collection: 24 animal-related models and 30 environment/prop models (based on the checked paths). This is a promising starting library for an asset-led farm, especially for animal variety, fencing, barns, crops, feed, troughs, storage and tools.
+- Six canonical Choppies-specific source archives are present under `assets/source-packs/choppiesassets/`: KayKit Restaurant Bits, LowPoly Cafe Drinks, LowPoly Party Food, an unidentified glTF archive, Kenney Food Kit, and Kenney Pixel Platformer Food Expansion. The public runtime tree contains 2,425 PNG files, 54 GLBs, 82 JSON files, 10 SVGs and four JPGs. These are repository-tree counts, not a claim that all assets suit the project or are licensed for release.
+- The archive-audit script is present at `scripts/audit-choppies-assets.mjs`, but this inspection did **not** execute it against a local checkout. The GitHub connector can inspect source text and repository paths but cannot render archive previews here. No archive member inventory, contact sheet, model polycount, animation-track inspection, licence determination or mobile performance measurement is claimed in this checkpoint.
+
+### Recommended reuse order
+
+1. **Keep the pure simulation core and tests** as the basis for crop growth, livestock needs, season progression and local save/resume, but extend its state model deliberately for crop types, harvests, inventory, farm locations, fictional requests and competition results.
+2. **Audit and preview the existing 54 GLBs before adding new packs.** Build a small visual evidence sheet for animals, fences/gates, barn, crops, tractor, wagon, wheelbarrow, water and storage. Confirm material/texture dependencies, scale, animation clips, compressed size, attribution and licence. The existing filenames indicate likely categories but do not establish visual quality or legal reuse.
+3. **Choose one coherent 3D art direction and prove one real scene first.** Start with a real character/animal, a compact farm area and real props from the audited library. Avoid making more placeholder geometric characters, food, crops, vehicles or buildings.
+4. **Make the farm the primary entry and navigation world**, with an optional skip-able intro and separate direct-launch list for only genuinely playable solo activities. Keep the scene routing and return-to-farm behaviour explicit.
+5. **Build the farming loop before peripheral games:** plough/prepare → plant → tend → harvest → store/sort → use produce for fictional requests, cook-offs and biggest-produce contests. Add Splatter at the pasture using real projectile/aiming mechanics after its cartoonish assets and collision rules are chosen. Cart racing should reuse Vula's physics lessons, but must wait for suitable cart/track assets.
+6. **Do not implement promotion or review mechanics as gameplay gates.** Any real Choppies offers need authorised, current data; reviews must be optional and must not be rewarded or pressured. Keep all commercial content separate from child progression.
+
+### Verification status
+
+- GitHub Actions at commit `d5a191b` — build: **passed**; verify (tests and build): **passed**.
+- The source-string syntax failure in `PawsWorldExperience.ts` was fixed in commit `d5a191b`.
+- These checks prove compilation and automated tests only. They do not prove the assets have been visually approved, the farm is playable, the menu launches a game, the game runs well on Android, or offline PWA behaviour works.
+- Local archive extraction, asset audit script execution, contact sheets, browser QA, phone QA and deployment QA remain outstanding.
