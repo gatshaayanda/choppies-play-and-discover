@@ -16,8 +16,8 @@ export class PublisherIntroScene extends Phaser.Scene {
     this.scale.on(Phaser.Scale.Events.RESIZE, this.layout, this);
     this.brand = this.add.text(0, 0, 'CHOPPIES', { fontFamily:'Arial, Helvetica, sans-serif', fontSize:'18px', fontStyle:'bold', color:'#ffffff', letterSpacing:5 }).setOrigin(.5).setAlpha(0);
     this.title = this.add.text(0, 0, 'PLAY & DISCOVER', { fontFamily:'Arial, Helvetica, sans-serif', fontSize:'56px', fontStyle:'bold', color:'#ffffff', align:'center', letterSpacing:1, wordWrap:{width:760} }).setOrigin(.5).setAlpha(0);
-    this.tagline = this.add.text(0, 0, 'A little fun for everyone.', { fontFamily:'Arial, Helvetica, sans-serif', fontSize:'20px', color:'#ffe9b2', align:'center', wordWrap:{width:720} }).setOrigin(.5).setAlpha(0);
-    this.hint = this.add.text(0, 0, 'TAP ANYWHERE TO EXPLORE', { fontFamily:'Arial, Helvetica, sans-serif', fontSize:'12px', fontStyle:'bold', color:'#ffffff', letterSpacing:2 }).setOrigin(.5).setAlpha(0);
+    this.tagline = this.add.text(0, 0, 'A little discovery. A little play. A place for everyone.', { fontFamily:'Arial, Helvetica, sans-serif', fontSize:'20px', color:'#ffe9b2', align:'center', wordWrap:{width:720} }).setOrigin(.5).setAlpha(0);
+    this.hint = this.add.text(0, 0, 'FOR SHOPPERS, FAMILIES & FRIENDS · TAP TO EXPLORE', { fontFamily:'Arial, Helvetica, sans-serif', fontSize:'12px', fontStyle:'bold', color:'#ffffff', letterSpacing:2 }).setOrigin(.5).setAlpha(0);
     this.layout(this.scale.gameSize);
     this.tweens.add({ targets:this.brand, alpha:1, y:'+=8', duration:650, ease:'Sine.easeOut' });
     this.tweens.add({ targets:this.title, alpha:1, y:'+=8', duration:900, delay:180, ease:'Sine.easeOut' });
@@ -31,7 +31,7 @@ export class PublisherIntroScene extends Phaser.Scene {
     const enter = () => this.leaveIntro();
     this.input.on('pointerdown', enter);
     this.input.keyboard?.on('keydown', enter);
-    this.time.delayedCall(3600, enter);
+    this.time.delayedCall(3200, enter);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       this.scale.off(Phaser.Scale.Events.RESIZE, this.layout, this);
       this.input.off('pointerdown', enter);

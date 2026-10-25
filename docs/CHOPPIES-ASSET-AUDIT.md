@@ -1,6 +1,6 @@
 # Choppies Play & Discover — Asset audit
 
-**Checkpoint:** archive-level inventory from the GitHub repository tree. Archive contents, preview images, animation layouts, embedded licences and redistribution terms have not yet been fully inspected. A filename is not proof that a pack is suitable or legally redistributable.
+**Checkpoint:** repository-level archive inventory and source-code review completed. The archive member listings, image dimensions, actual visual appearance, animation layouts, embedded licences and redistribution terms still require execution of the audit script and visual review. A filename is not proof that a pack is suitable or legally redistributable.
 
 ## Choppies-specific source packs
 The initial upload contained 11 archive paths but only 6 distinct archive blobs. Duplicates have been consolidated to one canonical copy of each pack and moved out of `public/` so source ZIPs are not shipped to visitors.
@@ -55,5 +55,5 @@ Reuse lesson: the car owns its world position and velocity; track projection is 
 2. Only approved runtime assets go into `public/assets/choppies/` after optimisation.
 3. For each selected asset, record path, dimensions/polycount, format, licence, attribution, source URL, target scene and device budget.
 4. Do not invent/draw substitute geometric characters, food or vehicles when a pack lacks the required asset. Reject the concept or find a properly licensed matching asset.
-5. Run `node scripts/audit-choppies-assets.mjs` to list ZIP/JAR members and licence/readme candidates, then visually inspect shortlisted art. RAR/7z require a compatible archive utility. Filename inventory alone cannot determine visual quality, animation correctness or licence permission.
+5. Run `npm run assets:audit` to inventory source archives and all extracted runtime files, including image dimensions and model metadata where readable. ZIP/JAR member listings and licence/readme candidates are catalogued; RAR/7z still require a compatible archive utility. Then open and visually inspect shortlisted art. Filename inventory alone cannot determine visual quality, animation correctness or licence permission.
 6. Keep imported ZIP/RAR/7z files out of `public/`; never make customers download the source library with the app.

@@ -378,3 +378,75 @@ html, body, #app { background: #c8102e; }
 @media (prefers-reduced-motion:reduce) {
   *,*::before,*::after { scroll-behavior:auto !important; animation-duration:.01ms !important; transition-duration:.01ms !important; }
 }
+
+
+/* Choppies discovery shell — typography and real navigation, not pretend game artwork. */
+.game-menu { background:#fffaf2; background-image:linear-gradient(120deg,rgba(255,212,71,.12),transparent 42%); color:#271b1a; }
+.game-menu-header { width:min(1240px,calc(100% - 48px)); padding:20px 0; gap:22px; }
+.brand { flex-shrink:0; }
+.brand-mark { border-radius:50%; box-shadow:0 0 0 4px rgba(200,16,46,.10); }
+.brand-wordmark span { display:block; }
+.menu-nav { display:flex; align-items:center; gap:24px; margin-left:auto; }
+.menu-nav a { color:#6c5551; text-decoration:none; font-size:13px; font-weight:800; }
+.menu-nav a:hover { color:#c8102e; }
+.menu-nav a:focus-visible,.brand:focus-visible,.menu-cta:focus-visible,.skip-link:focus-visible { outline:3px solid #1b6d55; outline-offset:4px; border-radius:6px; }
+.menu-label { white-space:nowrap; }
+.menu-hero { width:min(1240px,calc(100% - 48px)); margin:0 auto; padding:clamp(48px,8vh,100px) 0 64px; display:grid; grid-template-columns:minmax(0,1.45fr) minmax(260px,.7fr); align-items:center; gap:clamp(28px,6vw,84px); }
+.menu-hero-copy { max-width:780px; }
+.menu-hero .eyebrow,.family-first .eyebrow { margin:0 0 18px; color:#b20e29; font:900 11px/1.5 Arial,Helvetica,sans-serif; letter-spacing:1.8px; }
+.menu-hero h1 { margin:0; color:#c8102e; font:900 clamp(42px,6.6vw,84px)/.98 Arial,Helvetica,sans-serif; letter-spacing:-.065em; }
+.menu-hero h1 span { color:#271b1a; }
+.hero-description { max-width:600px; margin:24px 0 0; color:#6c5551; font-size:clamp(16px,1.8vw,19px); line-height:1.7; }
+.menu-hero-actions { display:flex; align-items:center; flex-wrap:wrap; gap:16px 20px; margin-top:30px; }
+.menu-cta { display:inline-flex; align-items:center; gap:18px; min-height:52px; padding:0 22px; border-radius:999px; background:#c8102e; color:#fff; text-decoration:none; font:900 13px/1 Arial,Helvetica,sans-serif; box-shadow:0 5px 0 #8f0b20; transition:transform 140ms ease,box-shadow 140ms ease; }
+.menu-cta:hover { transform:translateY(-2px); box-shadow:0 7px 0 #8f0b20; }
+.menu-cta span { font-size:20px; }
+.hero-microcopy { color:#806962; font-size:12px; line-height:1.4; }
+.hero-note { padding:28px; border:1px solid rgba(86,28,29,.14); border-radius:22px; background:#fff; box-shadow:0 18px 46px rgba(87,33,26,.07); }
+.hero-note-kicker { margin:0 0 15px; color:#b20e29; font:900 10px/1.4 Arial,Helvetica,sans-serif; letter-spacing:1.6px; }
+.hero-note h2 { margin:0 0 20px; color:#271b1a; font:900 clamp(24px,3vw,32px)/1.08 Arial,Helvetica,sans-serif; letter-spacing:-.04em; }
+.hero-note ul { display:grid; gap:12px; margin:0; padding:0; list-style:none; }
+.hero-note li { display:flex; align-items:center; gap:10px; color:#57413c; font-size:14px; font-weight:700; }
+.hero-note li::before { content:'✓'; display:grid; place-items:center; flex:0 0 24px; width:24px; height:24px; border-radius:50%; background:#fff1bc; color:#7a4b00; font-weight:900; }
+.hero-note-foot { margin:20px 0 0; padding-top:16px; border-top:1px solid rgba(86,28,29,.12); color:#806962; font-size:12px; line-height:1.5; }
+.experience-section,.family-first { width:min(1240px,calc(100% - 48px)); margin:0 auto; scroll-margin-top:18px; }
+.experience-section { padding:34px 0 68px; border-top:1px solid rgba(86,28,29,.13); }
+.section-heading { max-width:720px; margin-bottom:26px; }
+.section-heading .eyebrow { margin:0 0 12px; color:#b20e29; font:900 10px/1.4 Arial,Helvetica,sans-serif; letter-spacing:1.8px; }
+.section-heading h2 { margin:0 0 12px; color:#271b1a; font:900 clamp(29px,4vw,44px)/1.05 Arial,Helvetica,sans-serif; letter-spacing:-.05em; }
+.section-heading p:last-child { max-width:700px; margin:0; color:#6c5551; font-size:14px; line-height:1.7; }
+.future-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; }
+.future-card { min-height:0; padding:24px; border:1px solid rgba(86,28,29,.14); border-radius:18px; background:#fff; box-shadow:0 8px 24px rgba(87,33,26,.04); }
+.future-card-top { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+.future-number { color:#c8102e; font:900 24px/1 Arial,Helvetica,sans-serif; }
+.future-status { max-width:150px; padding:6px 9px; border-radius:999px; background:#fff1bc; color:#6b4700; font:900 8px/1.4 Arial,Helvetica,sans-serif; letter-spacing:.5px; text-align:right; }
+.future-category { margin:24px 0 10px; color:#8a716b; font:900 9px/1.4 Arial,Helvetica,sans-serif; letter-spacing:1.1px; }
+.future-card h3 { margin:0 0 12px; color:#271b1a; font:900 clamp(22px,2.6vw,29px)/1.05 Arial,Helvetica,sans-serif; letter-spacing:-.04em; }
+.future-card p:last-child { margin:0; color:#6c5551; font-size:14px; line-height:1.7; }
+.family-first { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:36px; align-items:start; padding:34px 0 62px; border-top:1px solid rgba(86,28,29,.13); scroll-margin-top:18px; }
+.family-first h2 { max-width:560px; margin:0; color:#c8102e; font:900 clamp(28px,4vw,42px)/1.04 Arial,Helvetica,sans-serif; letter-spacing:-.05em; }
+.family-first > p { margin:0; color:#6c5551; font-size:15px; line-height:1.8; }
+.game-menu-footer { width:min(1240px,calc(100% - 48px)); margin-top:auto; padding:22px 0 max(22px,env(safe-area-inset-bottom)); }
+.skip-link { position:absolute; z-index:1000; left:12px; top:12px; padding:12px 16px; transform:translateY(-160%); border-radius:8px; background:#fff; color:#271b1a; font-weight:800; }
+.skip-link:focus { transform:translateY(0); }
+@media (max-width:760px) {
+ .game-menu-header { width:calc(100% - 32px); flex-wrap:wrap; gap:14px; }
+ .menu-nav { order:3; width:100%; margin:0; gap:20px; }
+ .menu-label { margin-left:auto; font-size:8px; }
+ .menu-hero,.experience-section,.family-first,.game-menu-footer { width:calc(100% - 32px); }
+ .menu-hero { grid-template-columns:1fr; padding:44px 0 42px; gap:28px; }
+ .hero-note { max-width:560px; padding:22px; }
+ .future-grid { grid-template-columns:1fr; }
+ .future-card { padding:22px; }
+ .family-first { grid-template-columns:1fr; gap:18px; padding:30px 0 42px; }
+ .game-menu-footer { flex-wrap:wrap; gap:10px; font-size:8px; }
+}
+@media (max-width:380px) {
+ .brand { gap:9px; }
+ .brand-mark { width:36px; height:36px; font-size:24px; }
+ .brand-wordmark { font-size:10px; }
+ .brand-wordmark b { font-size:9px; }
+ .menu-label { display:none; }
+ .menu-hero h1 { font-size:42px; }
+}
+@media (prefers-reduced-motion:reduce) { .menu-cta { transition:none; } .menu-cta:hover { transform:none; } }
