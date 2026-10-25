@@ -50,6 +50,17 @@
 - Accounts should be optional for browsing and basic play where feasible. Collect the minimum data needed for a stated feature; explain the purpose, retention and deletion path in plain language. Never harvest long-form personal details for a game account. Avoid precise location, contact lists and children's real names by default.
 - Friends and invites should use deliberate user action, revocable invitations and privacy-preserving identifiers. Do not expose contact details, account discovery or activity to strangers by default.
 
+## Product-owner QA workflow — required
+- The normal customer journey is: **Choppies Play & Discover branded intro → discovery menu → choose Enter the farm or Discover mini-games**. The intro may be skipped/advanced; the discovery menu must remain the clear next screen.
+- **Enter the farm** opens a short choice screen: **New farm** or **Continue saved farm** (show Continue only when a valid local farm profile exists). New farm asks for a nickname/farm name, not a child's real name; creating a new farm resets the old prototype playtest save. Continue must use the existing saved state rather than silently start a new farm.
+- After either choice, show a short **Choppies Farm Preview** intro with honest scope and simple controls. The player explicitly taps **Start exploring** before gameplay begins. Returning from gameplay should return to the branded discovery menu.
+- The first QA deliverable is a **walkable, mobile-first farm preview** using verified existing code/assets, not a claim that the complete open-world farm is finished. Make the current prototype's real activities clear (movement, pasture, herding, dog care and the wildlife task); label crops, Fruit Match, Splatter, cooking, pumpkin competition and cart racing as planned until implemented.
+- **Mobile-first is the immediate QA target.** Prioritize portrait and narrow-phone layouts, safe-area insets, legible labels, large touch targets, stable movement controls and no accidental browser scrolling/zoom while playing. Do not spend this checkpoint optimizing wide laptop/desktop layouts; keep them usable enough not to block testing, then revisit desktop responsiveness after mobile QA.
+- The second menu path, **Discover mini-games**, must list planned activities but must not make unimplemented games clickable/playable. Add a launch action only after that activity has a real working scene and verified return-to-menu flow.
+- Work in short QA loops: implement the smallest coherent slice → push to `main` → report the exact commit and checks → let the product owner walk through it on their device → collect observed behaviour and decisions → implement the next agreed slice. Do not race ahead and make product decisions that the owner has explicitly reserved for QA/discussion.
+- Treat QA reports as observations, not assumptions. Fix only the reported issue and necessary connected failures; preserve working behaviours and protected infrastructure. Do not claim phone QA, visual approval, or deployment when only CI/source inspection was performed.
+- This project's immediate flow is intentionally narrow. Do not add account creation, cloud saves, multiplayer, live Choppies offers, review prompts, extra onboarding or unrelated features to this checkpoint.
+
 ## Development workflow
 - Existing project: UNDERSTAND → INSPECT → PLAN → IMPLEMENT → VERIFY → CHECKPOINT.
 - Unexpected result: STOP → inspect actual state → find earliest failure → fix → verify.
