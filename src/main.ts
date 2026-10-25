@@ -13,6 +13,7 @@ async function startExperience() {
       import('./pwa'),
       import('./scenes/BootScene'),
       import('./scenes/PublisherIntroScene'),
+      import('./scenes/LivingWorldGameScene'),
     ]);
 
     registerPwa();
