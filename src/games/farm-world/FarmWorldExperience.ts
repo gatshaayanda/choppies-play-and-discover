@@ -12,14 +12,16 @@ const styleText = `
 .cfw-hud{position:absolute;inset:0;pointer-events:none}.cfw-brand,.cfw-task,.cfw-btn,.cfw-pad{pointer-events:auto;background:#173d2be8;border:1px solid #fff4d477;border-radius:14px;color:#fff8df;box-shadow:0 5px 16px #183b2933}
 .cfw-brand{position:absolute;top:12px;left:12px;padding:10px 13px}.cfw-brand b{display:block;letter-spacing:.1em}.cfw-brand small{display:block;font-size:10px;color:#d8e9b8;margin-top:3px}
 .cfw-task{position:absolute;top:12px;right:12px;max-width:45vw;padding:10px 12px;font-size:11px}
-.cfw-bottom{position:absolute;bottom:max(12px,env(safe-area-inset-bottom));left:12px;right:12px;display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
-.cfw-pad{width:100px;height:100px;display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr 1fr 1fr;padding:5px;gap:3px}
-.cfw-btn{min-height:42px;padding:10px 12px;font-weight:800;font-size:11px;touch-action:manipulation}
-.cfw-pad button{border:0;border-radius:10px;background:#ffffff20;color:#fff8df;font-size:17px;touch-action:none}
-.cfw-actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px;max-width:62%}.cfw-actions .cfw-btn.primary{background:#f1d36d;color:#253b27}
-.cfw-hint{position:absolute;bottom:125px;left:50%;transform:translateX(-50%);background:#173d2be8;border-radius:12px;padding:9px 12px;max-width:80%;text-align:center;font-size:11px}
-@media(min-width:800px){.cfw-brand{top:20px;left:20px}.cfw-task{top:20px;right:20px}.cfw-bottom{left:20px;right:20px;bottom:20px}.cfw-pad{width:110px;height:110px}.cfw-actions .cfw-btn{font-size:12px;padding:12px 16px}}
-@media(max-height:480px){.cfw-pad{width:72px;height:72px}.cfw-btn{min-height:34px;padding:6px 8px}.cfw-hint{bottom:86px}}
+.cfw-bottom{position:absolute;bottom:max(12px,env(safe-area-inset-bottom));left:12px;right:12px;display:flex;justify-content:space-between;align-items:flex-end;gap:12px;pointer-events:none}
+.cfw-joystick{position:relative;flex:0 0 auto;width:clamp(104px,29vw,138px);height:clamp(104px,29vw,138px);border:2px solid #fff4d4aa;border-radius:50%;background:#173d2be0;box-shadow:inset 0 0 0 10px #ffffff0d;touch-action:none;pointer-events:auto;user-select:none;-webkit-tap-highlight-color:transparent}
+.cfw-joystick:after{content:'';position:absolute;inset:16%;border:1px solid #fff4d433;border-radius:50%;pointer-events:none}
+.cfw-knob{position:absolute;left:50%;top:50%;width:48%;height:48%;transform:translate(-50%,-50%);border:2px solid #fff4d4;border-radius:50%;background:#2d7954;box-shadow:0 4px 0 #102a1c88;pointer-events:none}
+.cfw-btn{min-height:48px;padding:12px 14px;font-weight:900;font-size:clamp(10px,2.8vw,13px);touch-action:manipulation;pointer-events:auto;box-shadow:0 4px 12px #183b2940}
+.cfw-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;width:min(58%,270px);pointer-events:auto}.cfw-actions .cfw-btn.primary{background:#f1d36d;color:#253b27}
+.cfw-hint{position:absolute;bottom:clamp(128px,32vw,158px);left:50%;transform:translateX(-50%);background:#173d2be8;border-radius:12px;padding:9px 12px;max-width:80%;text-align:center;font-size:11px;pointer-events:none}
+@media(min-width:800px){.cfw-brand{top:20px;left:20px}.cfw-task{top:20px;right:20px}.cfw-bottom{left:20px;right:20px;bottom:20px}.cfw-joystick{width:120px;height:120px}.cfw-actions{width:300px}.cfw-actions .cfw-btn{font-size:12px;padding:12px 16px}}
+@media(max-height:480px){.cfw-joystick{width:84px;height:84px}.cfw-btn{min-height:38px;padding:7px 8px}.cfw-hint{bottom:94px}}
+@media(max-width:360px){.cfw-joystick{width:96px;height:96px}.cfw-actions{width:58%;gap:5px}.cfw-btn{padding:8px 6px;font-size:10px}}
 `;
 
 export class FarmWorldExperience {
@@ -32,6 +34,8 @@ export class FarmWorldExperience {
   private player = new THREE.Group();
   private keys = new Set<string>();
   private held = new Set<string>();
+  private stickX = 0;
+  private stickZ = 0;
   private crops: THREE.Object3D[] = [];
   private animals: THREE.Group[] = [];
   private score = 0;
@@ -84,9 +88,16 @@ export class FarmWorldExperience {
     this.loader.load(FARM+path,(gltf)=>{if(this.disposed)return;const o=gltf.scene;o.position.set(...pos);o.scale.set(...scale);o.traverse(n=>{if((n as THREE.Mesh).isMesh){(n as THREE.Mesh).castShadow=true;(n as THREE.Mesh).receiveShadow=true;}});this.scene.add(o);if(crop)this.crops.push(o);if(animal)this.animals.push(o as THREE.Group);},undefined,()=>{});
   }
   private buildHud(){
-    this.root.insertAdjacentHTML('beforeend',`<div class="cfw-hud"><div class="cfw-brand"><b>CHOPPIES FARM WORLD</b><small>GROW · CARE · DISCOVER</small></div><div class="cfw-task" id="cfw-task">Harvest basket: 0 · Crops watered: 0</div><div class="cfw-hint" id="cfw-hint"></div><div class="cfw-bottom"><div class="cfw-pad" aria-label="Movement controls"><span></span><button data-dir="forward">▲</button><span></span><button data-dir="left">◀</button><button data-dir="back">▼</button><button data-dir="right">▶</button><span></span><span></span><span></span></div><div class="cfw-actions"><button class="cfw-btn primary" data-action="water">WATER CROPS</button><button class="cfw-btn" data-action="harvest">HARVEST</button><button class="cfw-btn" data-action="feed">FEED ANIMALS</button><button class="cfw-btn" data-action="back">BACK TO GAMES</button></div></div></div>`);
+    this.root.insertAdjacentHTML('beforeend',`<div class="cfw-hud"><div class="cfw-brand"><b>CHOPPIES FARM WORLD</b><small>GROW · CARE · DISCOVER</small></div><div class="cfw-task" id="cfw-task">Harvest basket: 0 · Crops watered: 0</div><div class="cfw-hint" id="cfw-hint"></div><div class="cfw-bottom"><div class="cfw-joystick" aria-label="Touch joystick: drag to move"><div class="cfw-knob"></div></div><div class="cfw-actions"><button class="cfw-btn primary" data-action="water">WATER CROPS</button><button class="cfw-btn" data-action="harvest">HARVEST</button><button class="cfw-btn" data-action="feed">FEED ANIMALS</button><button class="cfw-btn" data-action="back">BACK TO GAMES</button></div></div></div>`);
     this.taskText=this.root.querySelector('#cfw-task')||undefined;this.hintText=this.root.querySelector('#cfw-hint')||undefined;this.showHint(this.hint);
-    this.root.querySelectorAll<HTMLButtonElement>('[data-dir]').forEach(b=>{const d=b.dataset.dir||'';b.addEventListener('pointerdown',e=>{e.preventDefault();this.held.add(d);});const stop=()=>this.held.delete(d);b.addEventListener('pointerup',stop);b.addEventListener('pointercancel',stop);b.addEventListener('pointerleave',stop);});
+    const stick=this.root.querySelector<HTMLDivElement>('.cfw-joystick');
+    const knob=stick?.querySelector<HTMLDivElement>('.cfw-knob');
+    let stickPointer:number|null=null;
+    const resetStick=()=>{stickPointer=null;this.stickX=0;this.stickZ=0;if(knob)knob.style.transform='translate(-50%,-50%)';};
+    stick?.addEventListener('pointerdown',e=>{e.preventDefault();stickPointer=e.pointerId;stick.setPointerCapture(e.pointerId);moveStick(e);});
+    const moveStick=(e:PointerEvent)=>{if(stickPointer!==e.pointerId||!stick||!knob)return;const r=stick.getBoundingClientRect(),dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2),radius=r.width*.28,len=Math.hypot(dx,dy)||1,scale=Math.min(1,radius/len);knob.style.transform=`translate(calc(-50% + ${dx*scale}px),calc(-50% + ${dy*scale}px))`;const dead=7;this.stickX=len<dead?0:dx/len*Math.min(1,(len-dead)/(radius-dead));this.stickZ=len<dead?0:dy/len*Math.min(1,(len-dead)/(radius-dead));};
+    stick?.addEventListener('pointermove',moveStick);
+    stick?.addEventListener('pointerup',resetStick);stick?.addEventListener('pointercancel',resetStick);stick?.addEventListener('lostpointercapture',resetStick);
     this.root.querySelectorAll<HTMLButtonElement>('[data-action]').forEach(b=>b.addEventListener('click',()=>{const a=b.dataset.action;if(a==='back'){window.location.href='/';return;}this.action(a||'');}));
   }
   private action(action:string){
@@ -101,6 +112,6 @@ export class FarmWorldExperience {
   private keyDown=(e:KeyboardEvent)=>{if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','w','a','s','d','W','A','S','D'].includes(e.key)){this.keys.add(e.key.toLowerCase());e.preventDefault();}if(e.key.toLowerCase()==='e')this.action('harvest');};
   private keyUp=(e:KeyboardEvent)=>this.keys.delete(e.key.toLowerCase());
   private resize=()=>{if(!this.root.isConnected)return;const w=Math.max(1,this.root.clientWidth),h=Math.max(1,this.root.clientHeight);this.renderer.setSize(w,h);this.camera.aspect=w/h;this.camera.updateProjectionMatrix();};
-  private animate=()=>{if(this.disposed)return;this.frame=requestAnimationFrame(this.animate);const now=performance.now(),dt=Math.min(.05,(now-this.previous)/1000||.016);this.previous=now;let x=0,z=0;if(this.keys.has('a')||this.keys.has('arrowleft')||this.held.has('left'))x--;if(this.keys.has('d')||this.keys.has('arrowright')||this.held.has('right'))x++;if(this.keys.has('w')||this.keys.has('arrowup')||this.held.has('forward'))z--;if(this.keys.has('s')||this.keys.has('arrowdown')||this.held.has('back'))z++;const len=Math.hypot(x,z)||1;this.player.position.x+=x/len*dt*5;this.player.position.z+=z/len*dt*5;this.player.position.x=THREE.MathUtils.clamp(this.player.position.x,-23,23);this.player.position.z=THREE.MathUtils.clamp(this.player.position.z,-25,18);if(x||z)this.player.rotation.y=Math.atan2(x,z);this.camera.position.lerp(new THREE.Vector3(this.player.position.x,6.5,this.player.position.z+10),.08);this.camera.lookAt(this.player.position.x,0.8,this.player.position.z);if(this.hintTimer>0){this.hintTimer-=dt;if(this.hintTimer<=0&&this.hintText)this.hintText.textContent='WASD / arrows or the pad to explore · E to harvest';}this.renderer.render(this.scene,this.camera);};
+  private animate=()=>{if(this.disposed)return;this.frame=requestAnimationFrame(this.animate);const now=performance.now(),dt=Math.min(.05,(now-this.previous)/1000||.016);this.previous=now;let x=this.stickX,z=this.stickZ;if(this.keys.has('a')||this.keys.has('arrowleft')||this.held.has('left'))x--;if(this.keys.has('d')||this.keys.has('arrowright')||this.held.has('right'))x++;if(this.keys.has('w')||this.keys.has('arrowup')||this.held.has('forward'))z--;if(this.keys.has('s')||this.keys.has('arrowdown')||this.held.has('back'))z++;const len=Math.hypot(x,z)||1;this.player.position.x+=x/len*dt*5;this.player.position.z+=z/len*dt*5;this.player.position.x=THREE.MathUtils.clamp(this.player.position.x,-23,23);this.player.position.z=THREE.MathUtils.clamp(this.player.position.z,-25,18);if(x||z)this.player.rotation.y=Math.atan2(x,z);this.camera.position.lerp(new THREE.Vector3(this.player.position.x,6.5,this.player.position.z+10),.08);this.camera.lookAt(this.player.position.x,0.8,this.player.position.z);if(this.hintTimer>0){this.hintTimer-=dt;if(this.hintTimer<=0&&this.hintText)this.hintText.textContent='Drag the joystick to explore · tap an action when nearby';}this.renderer.render(this.scene,this.camera);};
   dispose(){this.disposed=true;cancelAnimationFrame(this.frame);window.removeEventListener('resize',this.resize);window.removeEventListener('keydown',this.keyDown);window.removeEventListener('keyup',this.keyUp);this.renderer.dispose();this.root.remove();document.querySelector('style[data-choppies-farm]')?.remove();}
 }
