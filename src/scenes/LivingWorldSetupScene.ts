@@ -1,42 +1,5 @@
 import Phaser from 'phaser';
-
 export class LivingWorldSetupScene extends Phaser.Scene {
-  constructor() {
-    super('LivingWorldSetupScene');
-  }
-
-  create() {
-    const render = () => {
-      const { width, height } = this.scale;
-      this.children.removeAll(true)
-      this.cameras.main.setBackgroundColor('#f3edda');
-      this.add.text(width / 2, height * 0.17, 'WELCOME TO PAWS WORLD', {
-        fontFamily: 'Arial, sans-serif', fontSize: `${Math.max(24, Math.min(42, height * 0.07))}px`,
-        fontStyle: 'bold', color: '#233e30', align: 'center',
-      }).setOrigin(0.5);
-      this.add.text(width / 2, height * 0.30,
-        'Your dog is waiting on the home range. Give them a name, explore the farm, and guide the flock.',
-        {
-          fontFamily: 'Arial, sans-serif', fontSize: `${Math.max(15, Math.min(20, height * 0.033))}px`,
-          color: '#536b57', align: 'center', lineSpacing: 8,
-          wordWrap: { width: width * 0.84 },
-        }).setOrigin(0.5);
-      this.add.text(width / 2, height * 0.52,
-        'YOUR FIRST DAY\n\n✓ Switch between all three dogs\n✓ Move with the pad or tap the ground\n✓ Use HERD to guide sheep and goats\n✓ Use STALK to approach wildlife quietly',
-        {
-          fontFamily: 'monospace', fontSize: `${Math.max(12, Math.min(17, height * 0.027))}px`,
-          color: '#233e30', align: 'center', lineSpacing: 7,
-        }).setOrigin(0.5);
-      const button = this.add.text(width / 2, height * 0.83, 'ENTER PAWS WORLD  →', {
-        fontFamily: 'monospace', fontSize: '13px', fontStyle: 'bold',
-        color: '#f3edda', backgroundColor: '#285440', padding: { x: 20, y: 16 },
-      }).setOrigin(0.5).setInteractive({ useHandCursor: false });
-      button.on('pointerdown', () => this.scene.start('LivingWorldGameScene'));
-    };
-    const enterWorld = () => this.scene.start('LivingWorldGameScene');
-    this.input.keyboard?.once('keydown-ENTER', enterWorld);
-    render();
-    this.scale.on(Phaser.Scale.Events.RESIZE, render, this);
-    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.scale.off(Phaser.Scale.Events.RESIZE, render, this));
-  }
+ constructor(){super('LivingWorldSetupScene')}
+ create(){let selected:'boy'|'girl'=localStorage.getItem('choppies-farmer')==='girl'?'girl':'boy';const render=()=>{const{width,height}=this.scale;this.children.removeAll(true);this.cameras.main.setBackgroundColor('#f6f0d9');this.add.text(width/2,height*.13,'CHOOSE YOUR FARMER',{fontFamily:'Arial,sans-serif',fontSize:`${Math.max(26,Math.min(44,height*.075))}px`,fontStyle:'bold',color:'#21482e',align:'center'}).setOrigin(.5);this.add.text(width/2,height*.23,'Who will explore Choppies Farm World with you?',{fontFamily:'Arial,sans-serif',fontSize:'17px',color:'#526a48',align:'center',wordWrap:{width:width*.84}}).setOrigin(.5);const y=height*.49,w=Math.min(width*.34,220),h=Math.min(height*.34,190);const card=(x:number,kind:'boy'|'girl',shirt:number,label:string)=>{const active=selected===kind;const c=this.add.rectangle(x,y,w,h,active?0xdff0c7:0xffffff).setStrokeStyle(active?4:2,active?0x2b713d:0xc8d3b6).setInteractive();this.add.circle(x,y-22,Math.min(27,w*.13),0xb8794e);this.add.rectangle(x,y+22,Math.min(58,w*.28),45,shirt);this.add.rectangle(x,y+54,Math.min(52,w*.25),10,0x315078);this.add.text(x,y+h*.39,label.toUpperCase(),{fontFamily:'monospace',fontSize:'13px',fontStyle:'bold',color:'#21482e'}).setOrigin(.5);if(active)this.add.text(x+w*.38,y-h*.4,'✓',{fontSize:'22px',color:'#2b713d'}).setOrigin(.5);c.on('pointerdown',()=>{selected=kind;render()});};card(width*.35,'boy',0x3b79b5,'Boy farmer');card(width*.65,'girl',0xe05c91,'Girl farmer');this.add.text(width/2,height*.72,'WASD / ARROWS · TOUCH CONTROLS · LOCAL PROGRESS',{fontFamily:'monospace',fontSize:'10px',color:'#61734f',align:'center'}).setOrigin(.5);const b=this.add.text(width/2,height*.86,'ENTER FARM WORLD  →',{fontFamily:'monospace',fontSize:'13px',fontStyle:'bold',color:'#fff8df',backgroundColor:'#245c36',padding:{x:22,y:16}}).setOrigin(.5).setInteractive();b.on('pointerdown',()=>{try{localStorage.setItem('choppies-farmer',selected)}catch{}this.scene.start('LivingWorldGameScene')});};render();this.scale.on(Phaser.Scale.Events.RESIZE,render,this);this.events.once(Phaser.Scenes.Events.SHUTDOWN,()=>this.scale.off(Phaser.Scale.Events.RESIZE,render,this));}
 }
