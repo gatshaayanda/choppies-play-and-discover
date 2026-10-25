@@ -94,3 +94,16 @@ This section records a source-code inspection of the current `main` branch after
 - The source-string syntax failure in `PawsWorldExperience.ts` was fixed in commit `d5a191b`.
 - These checks prove compilation and automated tests only. They do not prove the assets have been visually approved, the farm is playable, the menu launches a game, the game runs well on Android, or offline PWA behaviour works.
 - Local archive extraction, asset audit script execution, contact sheets, browser QA, phone QA and deployment QA remain outstanding.
+
+
+### Archive member spot-check (GitHub-hosted ZIP metadata)
+
+I inspected ZIP central-directory member names for the three smaller source archives directly from the repository. This is more than filename-only folder triage, but it still does **not** extract image previews, decode model geometry or animation tracks, or verify the legal terms inside the licence files.
+
+| Archive | Confirmed member evidence | Practical conclusion |
+|---|---|---|
+| `LowPolyCafeDrinksPack_v1.0.zip` | 119 files: 29 GLB, 29 FBX, 29 OBJ, 29 MTL, one Blender scene, a README and `LICENSE.txt`. Named models include bubble tea, cappuccino, cake dome, espresso cup, smoothie glass, takeaway cup, milk jug, coffee tools and bakery items. | Strongest inspected candidate for a later cookhouse/cafe scene. Prefer the included GLBs for a browser test; inspect their materials and scale, then select a small consistent subset. Do not load every format duplicate into the app. |
+| `LowPolyPartyFood_v1.0.zip` | 111 files: 27 GLB, 27 FBX, 27 OBJ, 27 MTL, one Blender scene, a README and `LICENSE.txt`. Includes burger, fries, pizza, taco, chips, cake, snacks, a snack stand and party props; it also includes a champagne-bottle model. | Useful food/competition props are present. Curate individual items; exclude alcohol-related art from the family-facing experience. Need visual/style review and licence confirmation before shipping. |
+| `kenney_pixel-platformer-food-expansion.zip` | 125 files including 116 PNGs, a Construct 3 project, tilemaps, a preview/sample and a `License.txt`. The PNGs are mostly numbered tile images. | Likely a 2D side-view/platformer-oriented food expansion, not automatically a top-down farm or 3D world set. Open the preview and tilesheet before choosing it for Fruit Match; do not mix it into the farm scene without a deliberate art-direction decision. |
+
+The repository API response did not provide complete binary data for the larger KayKit Restaurant Bits, Kenney Food Kit and unidentified glTF ZIPs, so their central directories were not successfully inspected in this pass. No claim is made about their actual member counts or contents. The archive files' embedded licence text has not yet been extracted and read; the presence of a licence/readme filename is not a legal clearance.
