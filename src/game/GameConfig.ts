@@ -4,6 +4,6 @@ export interface GameMetadata {
 }
 
 export const gameMetadata: GameMetadata = {
-  title: 'Admin Hub Games',
-  subtitle: 'Small worlds, stories, experiments and games made to be played.',
+  title: 'Choppies Play & Discover',
+  subtitle: 'A playful digital destination for shoppers and families.',
 };

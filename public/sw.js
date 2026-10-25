@@ -1,5 +1,5 @@
 // Bump this cache version for each production app release so installed PWAs detect a new worker.
-const CACHE_NAME = 'admin-hub-games-v50';
+const CACHE_NAME = 'choppies-play-discover-v1';
 const CORE_ASSETS = ['/', '/manifest.webmanifest', '/favicon.svg', '/icons/icon-192.svg', '/icons/icon-512.svg'];
 
 self.addEventListener('install', (event) => {
@@ -7,7 +7,7 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('activate', (event) => {
-  event.waitUntil(caches.keys().then((keys) => Promise.all(keys.filter((key) => key.startsWith('admin-hub-games-') && key !== CACHE_NAME).map((key) => caches.delete(key)))).then(() => self.clients.claim()));
+  event.waitUntil(caches.keys().then((keys) => Promise.all(keys.filter((key) => (key.startsWith('admin-hub-games-') || key.startsWith('choppies-play-discover-')) && key !== CACHE_NAME).map((key) => caches.delete(key)))).then(() => self.clients.claim()));
 });
 
 self.addEventListener('message', (event) => {

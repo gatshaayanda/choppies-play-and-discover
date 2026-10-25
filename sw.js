@@ -1,4 +1,4 @@
-const CACHE_NAME = 'admin-hub-games-v5';
+const CACHE_NAME = 'choppies-play-discover-v1';
 const CORE_ASSETS = [
   '/',
   '/index.html',
@@ -21,7 +21,7 @@ self.addEventListener('activate', (event) => {
     caches.keys()
       .then((keys) => Promise.all(
         keys
-          .filter((key) => key.startsWith('admin-hub-games-') && key !== CACHE_NAME)
+          .filter((key) => (key.startsWith('admin-hub-games-') || key.startsWith('choppies-play-discover-')) && key !== CACHE_NAME)
           .map((key) => caches.delete(key)),
       ))
       .then(() => self.clients.claim()),

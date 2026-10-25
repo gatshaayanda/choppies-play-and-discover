@@ -1,130 +1,53 @@
 import { markInstallSurfaceReady } from './pwa';
 
-type GameMenuItem = {
-  id: 'hall' | 'living-world' | 'presidents-shoes' | 'shooters-trigger' | 'wardrobe';
-  title: string;
-  description: string;
-  status: 'PLAY NOW' | 'IN DEVELOPMENT';
-  playable: true;
-};
-
-const games: GameMenuItem[] = [
-  {
-    id: 'hall',
-    title: 'HALL',
-    description: 'The Admin Hub Games world. Explore, read, leave something behind and return.',
-    status: 'PLAY NOW',
-    playable: true,
-  },
-  {
-    id: 'living-world',
-    title: 'PAWS WORLD',
-    description: 'Name your own dog, explore the open range, care for your companion and guide sheep and goats into the safe pen.',
-    status: 'PLAY NOW',
-    playable: true,
-  },
-  {
-    id: 'shooters-trigger',
-    title: 'SHOOTERS TRIGGER',
-    description: 'Paintball team training in development. Enter the field, play with your team and learn the arena.',
-    status: 'IN DEVELOPMENT',
-    playable: true,
-  },
-  {
-    id: 'wardrobe',
-    title: 'WARDROBE',
-    description: 'A character and animation lab. Inspect the Shooters Trigger player copy and prepare it for sprites, poses and future animation work.',
-    status: 'IN DEVELOPMENT',
-    playable: true,
-  },
-  {
-    id: 'presidents-shoes',
-    title: "PRESIDENT'S SHOES",
-    description: 'A fictional Botswana decision story. Choose, respond to consequences and see where your first week leads.',
-    status: 'PLAY NOW',
-    playable: true,
-  },
+const directions = [
+  { title:'Food & Market', description:'Discover familiar foods, produce, and everyday shopping moments through short, playful activities.', status:'ASSETS UNDER REVIEW', category:'FOOD · DISCOVERY' },
+  { title:'Family Fun', description:'Quick challenges designed for siblings, caregivers, and friends to share a laugh or learn something together.', status:'CONCEPT UNDER REVIEW', category:'TOGETHER · PLAY' },
+  { title:'Racing & Driving', description:'A future driving experience informed by the proven handling and collision work in Vula’s Car Wash—not a copy of its branding.', status:'MECHANICS UNDER REVIEW', category:'SKILL · MOVEMENT' },
 ];
 
-export function renderCatalog(onPlay: (gameId: GameMenuItem['id']) => void) {
-  const app = document.getElementById('app');
-  if (!app) return;
-
-  app.className = 'ahg-catalog';
-
-  // Keep Phaser's canvas mounted. Replacing #app.innerHTML would detach the
-  // live game canvas, so the selected game's scene can start cleanly underneath
-  // this menu. The library is an overlay on top of Phaser.
+export function renderCatalog() {
+  const app=document.getElementById('app');
+  if(!app) return;
+  app.className='ahg-catalog';
   app.querySelector('.game-menu')?.remove();
   app.insertAdjacentHTML('beforeend', `
     <main class="game-menu" aria-labelledby="game-menu-title">
       <header class="game-menu-header">
-        <div class="brand">
-          <span class="brand-mark">AH</span>
-          <span>ADMIN HUB <b>GAMES</b></span>
-        </div>
-        <span class="menu-label">GAME LIBRARY</span>
+        <a class="brand" href="/" aria-label="Choppies Play & Discover home">
+          <span class="brand-mark" aria-hidden="true">C</span>
+          <span class="brand-wordmark">CHOPPIES <b>PLAY & DISCOVER</b></span>
+        </a>
+        <span class="menu-label">A LITTLE FUN FOR EVERYONE</span>
       </header>
-
       <section class="game-menu-main">
         <div class="menu-intro">
-          <p class="eyebrow">PLAY · DISCOVER · RETURN</p>
-          <h1 id="game-menu-title">Choose a game.</h1>
-          <p>Select a world to begin. Games marked IN DEVELOPMENT are playable foundations, not finished releases.</p>
+          <p class="eyebrow">PLAY · DISCOVER · SHARE</p>
+          <h1 id="game-menu-title">Welcome to your<br>playground.</h1>
+          <p>A playful digital destination for Choppies shoppers and families in Botswana. We’re shaping the first collection around real assets, proven mechanics, and quick moments of fun.</p>
         </div>
-
-        <div class="menu-grid">
-          ${games.map((game, index) => `
-            <article class="menu-card ${game.playable ? 'is-playable' : 'is-coming'}">
-              <div class="menu-card-art" aria-hidden="true"><span>0${index + 1}</span></div>
-              <div class="menu-card-content">
-                <div class="menu-card-meta"><span>${game.status}</span><span>WORLD</span></div>
-                <h2>${game.title}</h2>
-                <p>${game.description}</p>
-                <button class="menu-play" data-game-id="${game.id}" type="button">PLAY ${game.title} <span>→</span></button>
-              </div>
-            </article>
-          `).join('')}
-        </div>
+        <section class="experience-section" aria-labelledby="discover-title">
+          <div class="section-heading">
+            <h2 id="discover-title">Choose what you’d like to discover.</h2>
+            <p>The first activities are being selected. Nothing below is presented as playable until its artwork, controls, and core loop have been inspected and verified.</p>
+          </div>
+          <div class="future-grid">
+            ${directions.map((item) => `
+              <article class="future-card">
+                <p class="future-category">${item.category}</p>
+                <div class="menu-card-meta"><span>${item.status}</span></div>
+                <h3>${item.title}</h3>
+                <p>${item.description}</p>
+              </article>
+            `).join('')}
+          </div>
+        </section>
       </section>
-
       <footer class="game-menu-footer">
-        <span>ADMIN HUB × PHASER</span>
-        <span>2 RELEASED · 3 IN DEVELOPMENT</span>
+        <span>CHOPPIES PLAY & DISCOVER</span>
+        <span>ACTIVITIES WILL OPEN HERE AS THEY ARE VERIFIED</span>
       </footer>
     </main>
   `);
-
   markInstallSurfaceReady();
-
-  const menu = app.querySelector<HTMLElement>('.game-menu');
-  const playButtons = Array.from(menu?.querySelectorAll<HTMLButtonElement>('.menu-play') ?? []);
-
-  const startSelectedGame = (event: Event) => {
-    event.preventDefault();
-    event.stopPropagation();
-
-    const button = event.currentTarget as HTMLButtonElement | null;
-    const gameId = button?.dataset.gameId as GameMenuItem['id'] | undefined;
-    if (!menu?.isConnected || !gameId) return;
-
-    menu.remove();
-    app.className = '';
-
-    // The library is a separate layer from Phaser. Wait for the browser's
-    // pointer/click gesture to finish before starting the selected game's intro.
-    window.setTimeout(() => onPlay(gameId), 120);
-  };
-
-  for (const button of playButtons) {
-    button.addEventListener('click', startSelectedGame, { once: true });
-    button.addEventListener('pointerdown', (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-    });
-    button.addEventListener('pointerup', (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-    });
-  }
 }

@@ -1,9 +1,9 @@
 :root {
-  --night: #070b1d;
-  --line: rgba(169,184,214,.22);
-  --muted: #a9b8d6;
-  --teal: #55d6c2;
-  --ink: #f4f7ff;
+  --night: #fffaf2;
+  --line: rgba(86, 28, 29, .16);
+  --muted: #6c5551;
+  --teal: #c8102e;
+  --ink: #271b1a;
 }
 
 html,
@@ -326,4 +326,55 @@ canvas {
   .menu-card { grid-template-columns: 1fr; }
   .menu-card-art { min-height: 150px; }
   .menu-card-content { padding: 22px; }
+}
+
+
+/* Choppies Play & Discover public identity and family-first menu */
+html, body, #app { background: #c8102e; }
+.game-menu { color: #271b1a; background: #fffaf2; background-image: radial-gradient(circle at 92% 8%, rgba(255,212,71,.18), transparent 24rem); }
+.game-menu-header, .game-menu-footer { color: #271b1a; border-color: rgba(86,28,29,.16); }
+.menu-label, .game-menu-footer { color: #735b54; letter-spacing: 1px; }
+.brand { display:flex; align-items:center; gap:12px; color:#c8102e; text-decoration:none; font-weight:900; }
+.brand-mark { display:grid; place-items:center; width:42px; height:42px; border-radius:12px; background:#c8102e; color:#fff; font:900 28px/1 Arial,sans-serif; }
+.brand-wordmark { display:flex; flex-direction:column; gap:4px; font:900 12px/1.2 Arial,sans-serif; letter-spacing:.8px; }
+.brand-wordmark b { color:#271b1a; font-size:10px; letter-spacing:1.2px; }
+.menu-intro .eyebrow, .eyebrow { color:#c8102e; font:900 10px/1.4 Arial,sans-serif; letter-spacing:2px; }
+.menu-intro h1 { color:#c8102e; font-family:Arial,Helvetica,sans-serif; font-weight:900; letter-spacing:-.06em; }
+.menu-intro > p:last-child { color:#6c5551; }
+.experience-section { margin-top:56px; }
+.section-heading { max-width:720px; margin-bottom:22px; }
+.section-heading h2 { margin:0 0 10px; color:#271b1a; font:900 clamp(26px,4vw,38px)/1.05 Arial,sans-serif; letter-spacing:-.04em; }
+.section-heading p { margin:0; color:#6c5551; font-size:14px; line-height:1.6; }
+.menu-grid { margin-top:20px; }
+.menu-card { grid-template-columns:104px minmax(0,1fr); border:1px solid rgba(86,28,29,.16); border-radius:18px; background:#fff; box-shadow:0 8px 26px rgba(87,33,26,.05); }
+.menu-card-art { min-height:230px; align-items:flex-start; justify-content:center; padding:18px 8px; background:#c8102e; }
+.menu-card-art span { color:#fff; font:900 28px/1 Arial,sans-serif; opacity:.92; }
+.menu-card-content { padding:24px; }
+.menu-card-meta { color:#c8102e; font:900 9px/1.4 Arial,sans-serif; letter-spacing:.7px; }
+.menu-card-meta span:last-child { color:#8a716b; }
+.menu-card h3 { margin:16px 0 10px; color:#271b1a; font:900 clamp(23px,3vw,31px)/1.05 Arial,sans-serif; letter-spacing:-.04em; }
+.menu-card p { color:#6c5551; }
+.menu-play { border:0; border-radius:999px; background:#c8102e; color:#fff; font:900 10px/1 Arial,sans-serif; letter-spacing:.7px; }
+.menu-play:hover { background:#a70d26; }
+.section-heading .eyebrow { margin-bottom:12px; }
+.future-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
+.future-card { min-height:200px; padding:22px; border:1px solid rgba(86,28,29,.14); border-radius:16px; background:rgba(255,255,255,.76); }
+.future-card h3 { margin:14px 0 9px; color:#c8102e; font:900 22px/1.1 Arial,sans-serif; }
+.future-card p:last-child { color:#6c5551; font-size:14px; line-height:1.6; }
+.future-category { margin:0 0 22px; color:#c8102e; font:900 10px/1 Arial,sans-serif; letter-spacing:2px; }
+.future-section { padding-top:12px; }
+.game-menu-footer { margin-top:42px; }
+.ahg-pwa-notice { border-color:rgba(255,255,255,.45); background:#7d0b20; color:#fff; }
+.ahg-pwa-notice button { border-color:#ffd447; background:#ffd447; color:#271b1a; }
+.ahg-pwa-notice button:last-child { color:#fff; }
+@media (max-width:700px) {
+  .game-menu-main { padding:6vh 0 7vh; }
+  .menu-card { grid-template-columns:1fr; }
+  .menu-card-art { min-height:54px; justify-content:flex-start; padding:16px 20px; }
+  .menu-card-content { padding:20px; }
+  .future-grid { grid-template-columns:1fr; }
+  .game-menu-footer { align-items:flex-start; flex-direction:column; gap:10px; }
+}
+@media (prefers-reduced-motion:reduce) {
+  *,*::before,*::after { scroll-behavior:auto !important; animation-duration:.01ms !important; transition-duration:.01ms !important; }
 }

@@ -1,13 +1,13 @@
 {
   "id": "/",
-  "name": "Admin Hub Games",
-  "short_name": "AH Games",
-  "description": "Small worlds, stories, experiments and games made to be played.",
+  "name": "Choppies Play & Discover",
+  "short_name": "Choppies Play",
+  "description": "A playful digital destination for Choppies shoppers and families.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#070b1d",
-  "theme_color": "#070b1d",
+  "background_color": "#c8102e",
+  "theme_color": "#c8102e",
   "icons": [
     {
       "src": "/icons/icon-192.svg",
