@@ -1,4 +1,4 @@
-/// <reference path="../types/three.d.ts" />
+/// <reference path="../../types/three.d.ts" />
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
