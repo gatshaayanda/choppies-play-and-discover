@@ -38,18 +38,30 @@ export function showInstallNotice() {
   const notice = document.createElement('div');
   notice.id = 'ahg-pwa-install';
   notice.className = 'ahg-pwa-notice ahg-pwa-install';
-  notice.innerHTML = '<span>KEEP CHOPPIES PLAY & DISCOVER ON YOUR PHONE</span><button type="button">INSTALL</button><button type="button" aria-label="Dismiss install prompt">×</button>';
+  document.getElementById('ahg-pwa-reopen')?.remove();
+  notice.innerHTML = '<div class="ahg-pwa-brand"><span class="ahg-pwa-mark" aria-hidden="true">C</span><span class="ahg-pwa-brand-copy"><strong>CHOPPIES</strong><small>PLAY & DISCOVER</small></span></div><button type="button" class="ahg-pwa-install-action">INSTALL APP ↗</button><button type="button" class="ahg-pwa-close" aria-label="Dismiss install prompt">×</button>';
 
   const buttons = notice.querySelectorAll('button');
   buttons[0]?.addEventListener('click', async () => {
     const prompt = deferredInstallPrompt;
     deferredInstallPrompt = undefined;
     notice.remove();
+    document.getElementById('ahg-pwa-reopen')?.remove();
     if (!prompt) return;
     try { await prompt.prompt(); } catch { /* browser may reject a stale prompt */ }
   }, { once: true });
 
-  buttons[1]?.addEventListener('click', () => notice.remove(), { once: true });
+  buttons[1]?.addEventListener('click', () => {
+    notice.remove();
+    if (!deferredInstallPrompt || document.getElementById('ahg-pwa-reopen')) return;
+    const reopen = document.createElement('button');
+    reopen.id = 'ahg-pwa-reopen';
+    reopen.className = 'ahg-pwa-reopen';
+    reopen.type = 'button';
+    reopen.textContent = 'INSTALL CHOPPIES';
+    reopen.addEventListener('click', showInstallNotice, { once: true });
+    document.body.append(reopen);
+  }, { once: true });
   document.body.append(notice);
 }
 
@@ -124,6 +136,24 @@ export async function promptInstall() {
   } catch {
     return false;
   }
+}
+
+function showPlatformInstallGuidance() {
+  if (window.matchMedia('(display-mode: standalone)').matches || (navigator as Navigator & { standalone?: boolean }).standalone) return;
+  const ua = navigator.userAgent;
+  const iosSafari = /iPhone|iPad|iPod/i.test(ua) && /Safari/i.test(ua) && !/CriOS|FxiOS|EdgiOS|OPiOS/i.test(ua);
+  const embedded = /FBAN|FBAV|Instagram|TikTok|Line\/|; wv\)/i.test(ua);
+  if (!embedded && !iosSafari) return;
+  const id = embedded ? 'ahg-pwa-browser-guide' : 'ahg-pwa-ios-guide';
+  if (document.getElementById(id)) return;
+  const guide = document.createElement('aside');
+  guide.id = id;
+  guide.className = 'ahg-pwa-platform-guide';
+  guide.innerHTML = embedded
+    ? '<strong>OPEN CHOPPIES IN YOUR BROWSER</strong><p>Use this app’s menu and choose “Open in browser” to install Choppies Play & Discover.</p><button type="button" aria-label="Dismiss browser guidance">×</button>'
+    : '<strong>ADD CHOPPIES TO YOUR HOME SCREEN</strong><p>In Safari, tap Share ↑, then choose “Add to Home Screen”.</p><button type="button" aria-label="Dismiss install guidance">×</button>';
+  guide.querySelector('button')?.addEventListener('click', () => guide.remove(), { once: true });
+  document.body.append(guide);
 }
 
 export function registerPwa() {
