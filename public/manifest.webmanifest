@@ -1,13 +1,18 @@
 {
   "id": "/",
   "name": "Choppies Play & Discover",
-  "short_name": "Choppies Play",
-  "description": "A playful digital destination for Choppies shoppers and families.",
+  "short_name": "Choppies",
+  "description": "Choppies Play & Discover — a mobile-first game console for playful farm exploration and mini-games.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
+  "orientation": "portrait-primary",
   "background_color": "#c8102e",
   "theme_color": "#c8102e",
+  "categories": [
+    "games",
+    "entertainment"
+  ],
   "icons": [
     {
       "src": "/icons/icon-192.svg",
@@ -19,7 +24,7 @@
       "src": "/icons/icon-512.svg",
       "sizes": "512x512",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "maskable"
     }
   ]
 }
