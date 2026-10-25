@@ -18,8 +18,8 @@ const games: GameMenuItem[] = [
   },
   {
     id: 'living-world',
-    title: 'PAWS WORLD',
-    description: 'Name your own dog, explore the open range, care for your companion and guide sheep and goats into the safe pen.',
+    title: 'CHOPPIES FARM WORLD',
+    description: 'Choose a boy or girl farmer, explore a 3D farm, water vegetable rows, harvest produce and care for farm animals.',
     status: 'PLAY NOW',
     playable: true,
   },
@@ -89,7 +89,7 @@ export function renderCatalog(onPlay: (gameId: GameMenuItem['id']) => void) {
       </section>
 
       <footer class="game-menu-footer">
-        <span>ADMIN HUB × PHASER</span>
+        <span>CHOPPIES · PLAY & DISCOVER</span>
         <span>2 RELEASED · 3 IN DEVELOPMENT</span>
       </footer>
     </main>
