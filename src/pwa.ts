@@ -38,7 +38,7 @@ export function showInstallNotice() {
   const notice = document.createElement('div');
   notice.id = 'ahg-pwa-install';
   notice.className = 'ahg-pwa-notice ahg-pwa-install';
-  notice.innerHTML = '<span>KEEP ADMIN HUB GAMES ON YOUR PHONE</span><button type="button">INSTALL</button><button type="button" aria-label="Dismiss install prompt">×</button>';
+  notice.innerHTML = '<span>KEEP CHOPPIES PLAY & DISCOVER ON YOUR PHONE</span><button type="button">INSTALL</button><button type="button" aria-label="Dismiss install prompt">×</button>';
 
   const buttons = notice.querySelectorAll('button');
   buttons[0]?.addEventListener('click', async () => {
