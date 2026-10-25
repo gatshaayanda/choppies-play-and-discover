@@ -14,10 +14,10 @@ export class PublisherIntroScene extends Phaser.Scene {
   create() {
     this.cameras.main.setBackgroundColor('#c8102e');
     this.scale.on(Phaser.Scale.Events.RESIZE, this.layout, this);
-    this.brand = this.add.text(0, 0, 'CHOPPIES', { fontFamily:'Arial, Helvetica, sans-serif', fontSize:'18px', fontStyle:'bold', color:'#ffffff', letterSpacing:5 }).setOrigin(.5).setAlpha(0);
-    this.title = this.add.text(0, 0, 'PLAY & DISCOVER', { fontFamily:'Arial, Helvetica, sans-serif', fontSize:'56px', fontStyle:'bold', color:'#ffffff', align:'center', letterSpacing:1, wordWrap:{width:760} }).setOrigin(.5).setAlpha(0);
-    this.tagline = this.add.text(0, 0, 'A little discovery. A little play. A place for everyone.', { fontFamily:'Arial, Helvetica, sans-serif', fontSize:'20px', color:'#ffe9b2', align:'center', wordWrap:{width:720} }).setOrigin(.5).setAlpha(0);
-    this.hint = this.add.text(0, 0, 'FOR SHOPPERS, FAMILIES & FRIENDS · TAP TO EXPLORE', { fontFamily:'Arial, Helvetica, sans-serif', fontSize:'12px', fontStyle:'bold', color:'#ffffff', letterSpacing:2 }).setOrigin(.5).setAlpha(0);
+    this.brand = this.add.text(0, 0, 'CHOPPIES', { fontFamily:'Arial, Helvetica, sans-serif', fontSize:'68px', fontStyle:'bold', color:'#ffffff', align:'center', letterSpacing:2 }).setOrigin(.5).setAlpha(0);
+    this.title = this.add.text(0, 0, 'PLAY & DISCOVER', { fontFamily:'Arial, Helvetica, sans-serif', fontSize:'30px', fontStyle:'bold', color:'#ffe9b2', align:'center', letterSpacing:3, wordWrap:{width:760} }).setOrigin(.5).setAlpha(0);
+    this.tagline = this.add.text(0, 0, 'A little discovery. A little play. A place for everyone.', { fontFamily:'Arial, Helvetica, sans-serif', fontSize:'20px', color:'#ffffff', align:'center', wordWrap:{width:720} }).setOrigin(.5).setAlpha(0);
+    this.hint = this.add.text(0, 0, 'TAP TO ENTER THE GAME CONSOLE', { fontFamily:'Arial, Helvetica, sans-serif', fontSize:'12px', fontStyle:'bold', color:'#ffffff', letterSpacing:2 }).setOrigin(.5).setAlpha(0);
     this.layout(this.scale.gameSize);
     this.tweens.add({ targets:this.brand, alpha:1, y:'+=8', duration:650, ease:'Sine.easeOut' });
     this.tweens.add({ targets:this.title, alpha:1, y:'+=8', duration:900, delay:180, ease:'Sine.easeOut' });
@@ -41,10 +41,10 @@ export class PublisherIntroScene extends Phaser.Scene {
 
   private layout(size: Phaser.Structs.Size) {
     const width=size.width, height=size.height, shortest=Math.min(width,height);
-    this.brand?.setPosition(width/2,height*.29).setFontSize(Math.max(14,Math.min(20,shortest*.04)));
-    this.title?.setPosition(width/2,height*.46).setFontSize(Math.max(30,Math.min(70,shortest*.12))).setWordWrapWidth(width*.9);
-    this.tagline?.setPosition(width/2,height*.60).setFontSize(Math.max(15,Math.min(23,shortest*.04))).setWordWrapWidth(width*.86);
-    this.hint?.setPosition(width/2,height*.88).setFontSize(Math.max(10,Math.min(13,shortest*.022)));
+    this.brand?.setPosition(width/2,height*.34).setFontSize(Math.max(34,Math.min(76,shortest*.17))).setWordWrapWidth(width*.9);
+    this.title?.setPosition(width/2,height*.49).setFontSize(Math.max(20,Math.min(36,shortest*.075))).setWordWrapWidth(width*.9);
+    this.tagline?.setPosition(width/2,height*.62).setFontSize(Math.max(14,Math.min(22,shortest*.045))).setWordWrapWidth(width*.86);
+    this.hint?.setPosition(width/2,height*.88).setFontSize(Math.max(10,Math.min(13,shortest*.025))).setWordWrapWidth(width*.9);
   }
 
   private leaveIntro() {
