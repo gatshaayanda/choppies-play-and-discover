@@ -127,6 +127,7 @@ export async function promptInstall() {
 }
 
 export function registerPwa() {
+  showPlatformInstallGuidance();
   if (!('serviceWorker' in navigator)) return;
 
   window.addEventListener('beforeinstallprompt', (event) => {
