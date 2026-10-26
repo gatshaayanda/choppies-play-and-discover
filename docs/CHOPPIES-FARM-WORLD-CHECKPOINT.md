@@ -1,26 +1,36 @@
 # Choppies Play & Discover — Farm World checkpoint
 
+## Product direction
+This is a Choppies-branded gaming and discovery portal, not a shopping app. The intended customer journey is publisher intro → focused Choppies game library → Boy/Girl farmer choice → Farm World gameplay. Do not substitute Paws World or leave unrelated Admin Hub games presented as the Choppies product.
+
 ## Current implementation
-- The clean Admin Hub Games clone remains the foundation; shared games and install/service-worker mechanisms are retained.
-- The library presents **Choppies Farm World** instead of Paws World.
-- The intro identifies Choppies Play & Discover.
-- First entry requires choosing **Boy farmer** or **Girl farmer**. The choice is saved locally and used to vary the farmer presentation.
-- Farm World loads committed 3D GLB assets for the barn, tractor, trough, well, fence, farm sign, vegetable rows and animals.
-- The first gameplay loop supports keyboard and touch movement, walking close to crop rows to water/harvest, and approaching animals to feed them. Points and watering progress are session state at this stage.
-- App metadata, manifest identity, publisher intro and PWA install-card wording are branded for Choppies. The install event lifecycle, user-triggered native prompt and service-worker code path were not redesigned.
+- Choppies branding is applied to the publisher intro, library, PWA metadata and app package identity.
+- The library is focused on Choppies Farm World; the startup imports only the scenes required for this experience so unrelated inherited game chunks cannot block launch.
+- The player chooses Boy farmer or Girl farmer before entering the farm. Choice is stored locally and affects the farmer's current procedural presentation.
+- Farm World uses committed GLB assets for the barn, tractor, trough, well, fence, farm sign, crop rows, cow, sheep, chick, goat and horse.
+- Keyboard and touch movement are available. Current interactions include watering/harvesting crop rows, feeding animals and mounting/dismounting the horse after approaching it.
+- The PWA install listener attaches before game startup. The branded card appears only when the browser supplies `beforeinstallprompt`; native installation is triggered by a user tap. Dismiss/reopen, iOS Safari guidance and embedded-browser guidance are implemented.
+- The startup error screen now displays the actual exception rather than hiding it behind the generic message.
 
-## Important limitations
-- This is an initial playable slice, not a finished farming simulation. Harvest/feeding are interaction prototypes; inventory, crop growth, animal needs, quests, persistence and progression are not yet implemented.
-- The farmer presentation is currently a lightweight procedural 3D character; the committed Mana Seed Farmer Sprite Free Sample archive has not yet been extracted and validated for runtime use.
-- The existing imported GLB assets load asynchronously; their final in-browser scale/placement and mobile performance still require QA.
-- Automated build/tests and real-device/browser QA have not yet been run in this implementation environment. Do not infer deployment from GitHub commits.
+## Important limitations — do not misrepresent
+- The farmer is still a procedural 3D model, not a validated authored farmer character asset.
+- The horse uses the actual committed GLB, but an authored rider model and riding animation have not been verified. The current mount interaction is a prototype.
+- Watering, harvesting and feeding are prototype interactions. Inventory, real crop growth stages, animal needs/autonomy, missions, world simulation, offline elapsed-time progression and a return report are not yet implemented in Farm World.
+- Asset placement, camera feel, horse scale/riding pose, browser startup and installability still require real-device QA. A successful build does not prove these.
 
-## QA gate
-1. Open the app and enter the game library.
-2. Select Choppies Farm World; verify the Choppies intro and boy/girl choice.
-3. Select each farmer and confirm the selected presentation changes.
-4. Check the 3D farm loads, then use the on-screen pad and WASD/arrows to move.
-5. Approach the vegetable rows and test WATER CROPS and HARVEST; approach each animal and test FEED ANIMALS.
-6. Test portrait/landscape and small-screen controls; check browser console/network for asset-load errors.
-7. Verify PWA install still appears only when the browser supplies the native install event and that install requires the user's tap.
-8. Confirm Hall, President's Shoes, Shooters Trigger and Wardrobe still open correctly.
+## Verification / QA
+1. Confirm production opens past the publisher intro and shows the focused Choppies Farm World library.
+2. Start Farm World, select Boy and then Girl on separate runs; verify the choice changes the farmer and persists.
+3. Verify the 3D environment and GLB assets load without console/network errors.
+4. Move with the touch joystick and keyboard; approach crops and animals to test each interaction.
+5. Approach the horse, mount, move, dismount and inspect the visual result.
+6. Check portrait/landscape, safe areas and performance on the target phone.
+7. In supported Chrome, confirm the install card appears only when the native event is available, only prompts on tap, and can be dismissed/reopened. On iOS Safari, verify Share → Add to Home Screen guidance.
+8. Confirm the service worker updates the shell and does not strand the user on stale cached code.
+
+## Next roadmap slices
+1. Stabilize and device-verify the Choppies startup and current playthrough.
+2. Audit and validate the actual farmer/horse/animal asset archives, including animation clips and licences; replace the procedural farmer only with a suitable validated asset.
+3. Implement a versioned local save and deterministic farm state: crops, harvest basket, animal needs, farm resources and bounded elapsed-time progression.
+4. Add readable goals/progression and a return report only after the simulation/save tests pass.
+5. Harden offline caching for required models and textures and test installed-PWA offline relaunch.
