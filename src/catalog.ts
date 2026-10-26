@@ -1,7 +1,7 @@
 import { markInstallSurfaceReady } from './pwa';
 
 type GameMenuItem = {
-  id: 'hall' | 'living-world' | 'presidents-shoes' | 'shooters-trigger' | 'wardrobe';
+  id: 'living-world';
   title: string;
   description: string;
   status: 'PLAY NOW' | 'IN DEVELOPMENT';
@@ -10,40 +10,13 @@ type GameMenuItem = {
 
 const games: GameMenuItem[] = [
   {
-    id: 'hall',
-    title: 'HALL',
-    description: 'Choppies Play & Discover — a growing collection of playful learning worlds.',
-    status: 'PLAY NOW',
-    playable: true,
-  },
-  {
     id: 'living-world',
     title: 'CHOPPIES FARM WORLD',
-    description: 'Choose a boy or girl farmer, explore a 3D farm, water vegetable rows, harvest produce and care for farm animals.',
+    description: 'Choose your farmer, explore a 3D farm, water and harvest vegetables, care for animals and discover the world on foot or horseback.',
     status: 'PLAY NOW',
     playable: true,
   },
-  {
-    id: 'shooters-trigger',
-    title: 'SHOOTERS TRIGGER',
-    description: 'Paintball team training in development. Enter the field, play with your team and learn the arena.',
-    status: 'IN DEVELOPMENT',
-    playable: true,
-  },
-  {
-    id: 'wardrobe',
-    title: 'WARDROBE',
-    description: 'A character and animation lab. Inspect the Shooters Trigger player copy and prepare it for sprites, poses and future animation work.',
-    status: 'IN DEVELOPMENT',
-    playable: true,
-  },
-  {
-    id: 'presidents-shoes',
-    title: "PRESIDENT'S SHOES",
-    description: 'A fictional Botswana decision story. Choose, respond to consequences and see where your first week leads.',
-    status: 'PLAY NOW',
-    playable: true,
-  },
+
 ];
 
 export function renderCatalog(onPlay: (gameId: GameMenuItem['id']) => void) {
@@ -69,8 +42,8 @@ export function renderCatalog(onPlay: (gameId: GameMenuItem['id']) => void) {
       <section class="game-menu-main">
         <div class="menu-intro">
           <p class="eyebrow">PLAY · DISCOVER · RETURN</p>
-          <h1 id="game-menu-title">Choose a game.</h1>
-          <p>Select a world to begin. Games marked IN DEVELOPMENT are playable foundations, not finished releases.</p>
+          <h1 id="game-menu-title">Your world is waiting.</h1>
+          <p>Choose your farmer and step into Choppies Farm World.</p>
         </div>
 
         <div class="menu-grid">
