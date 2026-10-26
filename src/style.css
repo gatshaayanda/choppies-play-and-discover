@@ -29,7 +29,7 @@ html {
 
 body {
   overflow: hidden;
-  background: #16120f;
+  background: #102d20;
   font-family: Arial, sans-serif;
   overscroll-behavior: none;
   -webkit-user-select: none;
@@ -45,7 +45,7 @@ body {
   height: 100dvh;
   min-height: 180px;
   overflow: hidden;
-  background: #16120f;
+  background: #102d20;
 }
 
 canvas {
@@ -322,7 +322,7 @@ canvas {
 .menu-play span { margin-left: 10px; }
 .menu-disabled { margin-top: 26px; color: rgba(169,184,214,.55); font: 800 9px/1 monospace; letter-spacing: 1px; }
 .game-menu-footer { padding: 18px 0; border-top: 1px solid var(--line); }
-.ahg-fallback { min-height: 100svh; display: grid; place-content: center; gap: 18px; text-align: center; background: var(--night); color: var(--ink); font: 800 12px/1.5 monospace; }
+.ahg-fallback { min-height: 100svh; display: grid; place-content: center; gap: 18px; text-align: center; background: linear-gradient(145deg, #102d20, #173b29 58%, #0c2419); color: var(--ink); font: 800 12px/1.5 monospace; }
 .ahg-fallback button { min-height: 48px; border: 1px solid var(--choppies-yellow); background: var(--choppies-yellow); color: #173b29; cursor: pointer; font: 800 10px/1 monospace; letter-spacing: 1px; }
 @media (max-width: 700px) {
   .game-menu-header, .game-menu-footer, .game-menu-main { width: min(100% - 28px, 1180px); }
