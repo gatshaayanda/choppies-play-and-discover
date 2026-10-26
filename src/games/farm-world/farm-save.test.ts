@@ -24,7 +24,7 @@ describe('Farm World local save validation', () => {
   it('recovers safely from malformed, unsupported or future-clock saves', () => {
     expect(parseFarmSave('{broken', 200)).toEqual(emptyFarmSave(200));
     expect(parseFarmSave(JSON.stringify({ version: 99, score: 900 }), 200)).toEqual(emptyFarmSave(200));
-    expect(parseFarmSave(JSON.stringify({ version: 1, savedAt: 9999, score: -20 }), 200)).toEqual({
+    expect(parseFarmSave(JSON.stringify({ version: 1, savedAt: 999999, score: -20 }), 200)).toEqual({
       version: 1, savedAt: 200, score: 0,
       wateredCropIds: [], harvestedCropIds: [], fedAnimalIds: [],
     });
