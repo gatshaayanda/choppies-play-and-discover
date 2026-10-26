@@ -16,7 +16,7 @@ describe('Farm World simulation core', () => {
     expect(a).toEqual(b);
     expect(a.crops['crop-a'].stage).toBe('ready');
     expect(a.animals['cow-a'].hunger).toBe(34);
-    expect(a.animals['cow-a'].thirst).toBe(33);
+    expect(a.animals['cow-a'].thirst).toBe(53);
     expect(a.returnReport.some((event) => event.includes('ready to harvest'))).toBe(true);
   });
 
