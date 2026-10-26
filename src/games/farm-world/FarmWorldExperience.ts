@@ -2,6 +2,7 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { emptyFarmSave, readFarmSave, writeFarmSave, type FarmSave } from './farm-save';
+import { advanceFarmWorld, feedAnimal, harvestCrop, loadFarmWorldState, saveFarmWorldState, waterAnimal, waterCrop, type FarmWorldState } from './farm-world-state';
 
 type Farmer = 'boy' | 'girl';
 const FARM = '/assets/living-world/';
@@ -42,6 +43,7 @@ export class FarmWorldExperience {
   private horseModel?: THREE.Object3D;
   private mounted = false;
   private farmSave: FarmSave = emptyFarmSave();
+  private worldState: FarmWorldState;
   private score = 0;
   private watered = 0;
   private hint = 'Explore the farm. Walk to a crop row and tap WATER or HARVEST.';
@@ -54,13 +56,16 @@ export class FarmWorldExperience {
 
   constructor(host: HTMLElement) {
     const style = document.createElement('style'); style.dataset.choppiesFarm = 'true'; style.textContent = styleText; document.head.appendChild(style);
-    this.farmSave = readFarmSave(); this.score = this.farmSave.score; this.watered = this.farmSave.wateredCropIds.length;
+    this.farmSave = readFarmSave(); this.score = this.farmSave.score;
+    this.worldState = loadFarmWorldState();
+    this.watered = Object.values(this.worldState.crops).filter(c => c.stage === 'sprout' || c.stage === 'growing' || c.stage === 'ready').length;
     this.root = document.createElement('div'); this.root.className = 'cfw'; host.appendChild(this.root);
     this.renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'low-power' });
     this.renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.5)); this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.root.appendChild(this.renderer.domElement);
     this.scene.background = new THREE.Color('#b9d8e7'); this.scene.fog = new THREE.Fog('#b9d8e7', 38, 115);
     this.buildGround(); this.buildFarmer(); this.buildHud(); this.resize();
+    if(this.worldState.returnReport.length){this.showHint('While you were away: '+this.worldState.returnReport.join(' '));this.worldState.returnReport=[];saveFarmWorldState(this.worldState);}
     window.addEventListener('resize', this.resize); window.addEventListener('keydown', this.keyDown); window.addEventListener('keyup', this.keyUp);
     this.loadModel('environment/barn.glb', [-9,0,-12], [1.8,1.8,1.8]);
     this.loadModel('environment/tractor.glb', [8,0,-5], [1.4,1.4,1.4]);
@@ -91,10 +96,10 @@ export class FarmWorldExperience {
     this.player.position.set(0,0,7);this.scene.add(this.player);
   }
   private loadModel(path:string,pos:[number,number,number],scale:[number,number,number],crop=false,animal=false) {
-    this.loader.load(FARM+path,(gltf)=>{if(this.disposed)return;const o=gltf.scene;o.position.set(...pos);o.scale.set(...scale);o.userData.farmId=path+':'+pos.join(',');o.traverse((n:THREE.Object3D)=>{if((n as THREE.Mesh).isMesh){(n as THREE.Mesh).castShadow=true;(n as THREE.Mesh).receiveShadow=true;}});this.scene.add(o);if(crop)this.crops.push(o);if(animal)this.animals.push(o as THREE.Group);},undefined,()=>{});
+    this.loader.load(FARM+path,(gltf)=>{if(this.disposed)return;const o=gltf.scene;o.position.set(...pos);o.scale.set(...scale);o.userData.farmId=path+':'+pos.join(',');o.userData.baseScale=scale;o.traverse((n:THREE.Object3D)=>{if((n as THREE.Mesh).isMesh){(n as THREE.Mesh).castShadow=true;(n as THREE.Mesh).receiveShadow=true;}});this.scene.add(o);if(crop){this.crops.push(o);this.applyCropVisual(String(o.userData.farmId));}if(animal)this.animals.push(o as THREE.Group);},undefined,()=>{});
   }
   private buildHud(){
-    this.root.insertAdjacentHTML('beforeend',`<div class="cfw-hud"><div class="cfw-brand"><b>CHOPPIES FARM WORLD</b><small>GROW · CARE · DISCOVER</small></div><div class="cfw-task" id="cfw-task">Harvest basket: 0 · Crops watered: 0</div><div class="cfw-hint" id="cfw-hint"></div><div class="cfw-bottom"><div class="cfw-joystick" aria-label="Touch joystick: drag to move"><div class="cfw-knob"></div></div><div class="cfw-actions"><button class="cfw-btn primary" data-action="water">WATER CROPS</button><button class="cfw-btn" data-action="harvest">HARVEST</button><button class="cfw-btn" data-action="feed">FEED ANIMALS</button><button class="cfw-btn" data-action="ride">RIDE HORSE</button><button class="cfw-btn" data-action="back">BACK TO GAMES</button></div></div></div>`);
+    this.root.insertAdjacentHTML('beforeend',`<div class="cfw-hud"><div class="cfw-brand"><b>CHOPPIES FARM WORLD</b><small>GROW · CARE · DISCOVER</small></div><div class="cfw-task" id="cfw-task">Harvest basket: 0 · Crops watered: 0</div><div class="cfw-hint" id="cfw-hint"></div><div class="cfw-bottom"><div class="cfw-joystick" aria-label="Touch joystick: drag to move"><div class="cfw-knob"></div></div><div class="cfw-actions"><button class="cfw-btn primary" data-action="water">WATER CROPS</button><button class="cfw-btn" data-action="harvest">HARVEST</button><button class="cfw-btn" data-action="feed">FEED ANIMALS</button><button class="cfw-btn" data-action="water-animal">WATER ANIMALS</button><button class="cfw-btn" data-action="ride">RIDE HORSE</button><button class="cfw-btn" data-action="back">BACK TO GAMES</button></div></div></div>`);
     this.taskText=this.root.querySelector('#cfw-task')||undefined;this.hintText=this.root.querySelector('#cfw-hint')||undefined;this.updateTask();this.showHint(this.hint);
     const stick=this.root.querySelector<HTMLDivElement>('.cfw-joystick');
     const knob=stick?.querySelector<HTMLDivElement>('.cfw-knob');
@@ -119,26 +124,54 @@ export class FarmWorldExperience {
     if(action==='water'){
       const crop=nearest(this.crops);
       if(!crop){this.showHint('Walk closer to the crop rows first.');return;}
-      if(this.farmSave.harvestedCropIds.includes(crop.id)){this.showHint('That row has already been harvested.');return;}
-      if(this.farmSave.wateredCropIds.includes(crop.id)){this.showHint('This crop row is already watered. Try another row.');return;}
-      this.farmSave.wateredCropIds.push(crop.id);this.watered=this.farmSave.wateredCropIds.length;this.score+=5;
-      this.showHint('Nice watering! This row is ready for harvest. +5 points');this.persistFarmProgress();return;
+      const result=waterCrop(this.worldState,crop.id);
+      if(result.state===this.worldState){this.showHint(result.message);return;}
+      this.worldState=result.state;
+      if(!this.farmSave.wateredCropIds.includes(crop.id))this.farmSave.wateredCropIds.push(crop.id);
+      this.watered=Object.values(this.worldState.crops).filter(c=>c.stage==='sprout'||c.stage==='growing'||c.stage==='ready').length;
+      this.score+=5;this.showHint(result.message+' +5 points');this.persistWorldState();this.persistFarmProgress();return;
     }
     if(action==='harvest'){
       const crop=nearest(this.crops);
       if(!crop){this.showHint('Walk into the vegetable rows to harvest.');return;}
-      if(this.farmSave.harvestedCropIds.includes(crop.id)){this.showHint('This row has already been harvested. Explore another crop row.');return;}
-      if(!this.farmSave.wateredCropIds.includes(crop.id)){this.showHint('Water this crop row before harvesting it.');return;}
-      this.farmSave.harvestedCropIds.push(crop.id);this.score+=10;
-      this.showHint('Fresh produce collected for the Choppies basket! +10 points');this.persistFarmProgress();return;
+      const result=harvestCrop(this.worldState,crop.id);
+      if(!result.harvested){this.showHint(result.message);return;}
+      this.worldState=result.state;
+      if(!this.farmSave.harvestedCropIds.includes(crop.id))this.farmSave.harvestedCropIds.push(crop.id);
+      this.watered=Object.values(this.worldState.crops).filter(c=>c.stage==='sprout'||c.stage==='growing'||c.stage==='ready').length;
+      this.score+=10;this.applyCropVisual(crop.id);
+      this.showHint(result.message+' +10 points');this.persistWorldState();this.persistFarmProgress();return;
+    }
+    if(action==='water-animal'){
+      const animal=nearest(this.animals);
+      if(!animal){this.showHint('Walk closer to the farm animals first.');return;}
+      const needs=this.worldState.animals[animal.id]??{hunger:45,thirst:35,energy:80,trust:10};
+      if(needs.thirst<30){this.showHint('This animal is not thirsty yet. Check another animal or return later.');return;}
+      if(this.worldState.waterReserve<5){this.showHint('The farm water reserve is low. Rain will replenish it.');return;}
+      this.worldState=waterAnimal(this.worldState,animal.id);this.score+=5;
+      this.showHint('Fresh water given to the animal. +5 points');this.persistWorldState();this.persistFarmProgress();return;
     }
     if(action==='feed'){
       const animal=nearest(this.animals);
       if(!animal){this.showHint('Walk closer to the farm animals first.');return;}
-      if(this.farmSave.fedAnimalIds.includes(animal.id)){this.showHint('You have already fed this animal. Visit another animal for now.');return;}
-      this.farmSave.fedAnimalIds.push(animal.id);this.score+=5;
-      this.showHint('The animal has been fed. +5 points');this.persistFarmProgress();return;
+      const needs=this.worldState.animals[animal.id]??{hunger:45,thirst:35,energy:80,trust:10};
+      if(needs.hunger<30){this.showHint('This animal is not hungry yet. Check another animal or return later.');return;}
+      this.worldState=feedAnimal(this.worldState,animal.id);this.farmSave.fedAnimalIds.push(animal.id);this.score+=5;
+      this.showHint('The animal has been fed and trust has grown. +5 points');this.persistWorldState();this.persistFarmProgress();return;
     }
+  }
+  private persistWorldState(){
+    saveFarmWorldState(this.worldState);
+    this.watered=Object.values(this.worldState.crops).filter(c=>c.stage==='sprout'||c.stage==='growing'||c.stage==='ready').length;
+    for(const id of Object.keys(this.worldState.crops))this.applyCropVisual(id);
+  }
+  private applyCropVisual(id:string){
+    const object=this.crops.find(item=>String(item.userData.farmId)===id);
+    const crop=this.worldState.crops[id];
+    if(!object||!crop)return;
+    const base=(object.userData.baseScale as [number,number,number]|undefined)??[.9,.9,.9];
+    const factor=crop.stage==='sprout'?.68:crop.stage==='growing'?.86:crop.stage==='ready'?1.12:.48;
+    object.scale.set(base[0]*factor,base[1]*factor,base[2]*factor);
   }
   private persistFarmProgress(){
     this.farmSave.score=this.score;
@@ -148,12 +181,12 @@ export class FarmWorldExperience {
     writeFarmSave(this.farmSave);this.updateTask();
   }
   private updateTask(){
-    if(this.taskText)this.taskText.textContent=`Farm points: ${this.score} · Basket: ${this.farmSave.harvestedCropIds.length} · Crops watered: ${this.watered}`;
+    if(this.taskText)this.taskText.textContent=`Points: ${this.score} · Basket: ${this.farmSave.harvestedCropIds.length} · Growing: ${this.watered} · Water: ${Math.round(this.worldState.waterReserve)} · ${this.worldState.season} / ${this.worldState.weather}`;
   }
   private showHint(s:string){this.hint=s;this.hintTimer=4;if(this.hintText)this.hintText.textContent=s;}
   private keyDown=(e:KeyboardEvent)=>{if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','w','a','s','d','W','A','S','D'].includes(e.key)){this.keys.add(e.key.toLowerCase());e.preventDefault();}if(e.key.toLowerCase()==='e')this.action('harvest');};
   private keyUp=(e:KeyboardEvent)=>this.keys.delete(e.key.toLowerCase());
   private resize=()=>{if(!this.root.isConnected)return;const w=Math.max(1,this.root.clientWidth),h=Math.max(1,this.root.clientHeight);this.renderer.setSize(w,h);this.camera.aspect=w/h;this.camera.updateProjectionMatrix();};
-  private animate=()=>{if(this.disposed)return;this.frame=requestAnimationFrame(this.animate);const now=performance.now(),dt=Math.min(.05,(now-this.previous)/1000||.016);this.previous=now;let x=this.stickX,z=this.stickZ;if(this.keys.has('a')||this.keys.has('arrowleft')||this.held.has('left'))x--;if(this.keys.has('d')||this.keys.has('arrowright')||this.held.has('right'))x++;if(this.keys.has('w')||this.keys.has('arrowup')||this.held.has('forward'))z--;if(this.keys.has('s')||this.keys.has('arrowdown')||this.held.has('back'))z++;const len=Math.hypot(x,z)||1;this.player.position.x+=x/len*dt*5;this.player.position.z+=z/len*dt*5;this.player.position.x=Math.max(-23,Math.min(23,this.player.position.x));this.player.position.z=Math.max(-25,Math.min(18,this.player.position.z));if(x||z)this.player.rotation.y=Math.atan2(x,z);this.camera.position.lerp(new THREE.Vector3(this.player.position.x,6.5,this.player.position.z+10),.08);this.camera.lookAt(this.player.position.x,0.8,this.player.position.z);if(this.hintTimer>0){this.hintTimer-=dt;if(this.hintTimer<=0&&this.hintText)this.hintText.textContent='Drag the joystick to explore · tap an action when nearby';}this.renderer.render(this.scene,this.camera);};
+  private animate=()=>{if(this.disposed)return;this.frame=requestAnimationFrame(this.animate);const now=performance.now(),dt=Math.min(.05,(now-this.previous)/1000||.016);this.previous=now;if(Date.now()-this.worldState.lastSimulatedAt>=6*60*60*1000){this.worldState=advanceFarmWorld(this.worldState,Date.now());saveFarmWorldState(this.worldState);this.updateTask();for(const id of Object.keys(this.worldState.crops))this.applyCropVisual(id);if(this.worldState.returnReport.length){this.showHint(this.worldState.returnReport.join(' '));this.worldState.returnReport=[];saveFarmWorldState(this.worldState);}}let x=this.stickX,z=this.stickZ;if(this.keys.has('a')||this.keys.has('arrowleft')||this.held.has('left'))x--;if(this.keys.has('d')||this.keys.has('arrowright')||this.held.has('right'))x++;if(this.keys.has('w')||this.keys.has('arrowup')||this.held.has('forward'))z--;if(this.keys.has('s')||this.keys.has('arrowdown')||this.held.has('back'))z++;const len=Math.hypot(x,z)||1;this.player.position.x+=x/len*dt*5;this.player.position.z+=z/len*dt*5;this.player.position.x=Math.max(-23,Math.min(23,this.player.position.x));this.player.position.z=Math.max(-25,Math.min(18,this.player.position.z));if(x||z)this.player.rotation.y=Math.atan2(x,z);this.camera.position.lerp(new THREE.Vector3(this.player.position.x,6.5,this.player.position.z+10),.08);this.camera.lookAt(this.player.position.x,0.8,this.player.position.z);if(this.hintTimer>0){this.hintTimer-=dt;if(this.hintTimer<=0&&this.hintText)this.hintText.textContent='Drag the joystick to explore · tap an action when nearby';}this.renderer.render(this.scene,this.camera);};
   dispose(){this.disposed=true;cancelAnimationFrame(this.frame);window.removeEventListener('resize',this.resize);window.removeEventListener('keydown',this.keyDown);window.removeEventListener('keyup',this.keyUp);this.renderer.dispose();this.root.remove();document.querySelector('style[data-choppies-farm]')?.remove();}
 }
