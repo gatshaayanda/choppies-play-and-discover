@@ -49,14 +49,36 @@ function startHall() {
     (window as Window & { __AHG_GAME__?: unknown }).__AHG_GAME__ = game;
   };
 
-  void boot().catch((error: unknown) => {
+  void boot().catch(async (error: unknown) => {
     console.error('[Choppies] Startup failed:', error);
+    const message = error instanceof Error ? `${error.name}: ${error.message}` : String(error);
+
+    // Recover once from stale Vite chunks left by an older installed PWA.
+    // Only clear this app's caches; never touch local farm progress.
+    const cacheMismatch = /failed to fetch dynamically imported module|importing a module script failed|loading chunk|failed to fetch/i.test(message);
+    if (cacheMismatch && navigator.onLine && !sessionStorage.getItem('choppies-startup-recovered')) {
+      sessionStorage.setItem('choppies-startup-recovered', '1');
+      try {
+        if ('serviceWorker' in navigator) {
+          const workers = await navigator.serviceWorker.getRegistrations();
+          await Promise.all(workers.filter((worker) => new URL(worker.scope).origin === location.origin).map((worker) => worker.unregister()));
+        }
+        if ('caches' in window) {
+          const names = await caches.keys();
+          await Promise.all(names.filter((name) => name.startsWith('choppies-play-discover-') || name.startsWith('admin-hub-games-')).map((name) => caches.delete(name)));
+        }
+        window.location.reload();
+        return;
+      } catch (recoveryError) {
+        console.error('[Choppies] Automatic cache recovery failed:', recoveryError);
+      }
+    }
+
     const app = document.getElementById('app');
     if (!app) return;
-    const message = error instanceof Error ? `${error.name}: ${error.message}` : String(error);
-    app.innerHTML = `<main class="ahg-fallback"><p>CHOPPIES PLAY & DISCOVER COULD NOT START.</p><p class="ahg-fallback-help">Startup error details (send this text if the problem repeats):</p><pre class="ahg-fallback-error"></pre><button type="button" id="ahg-return-menu">RETRY</button></main>`;
+    app.innerHTML = `<main class="ahg-fallback"><p>CHOPPIES PLAY & DISCOVER COULD NOT START.</p><p class="ahg-fallback-help">Startup error details:</p><pre class="ahg-fallback-error"></pre><button type="button" id="ahg-return-menu">RETRY</button></main>`;
     const details = app.querySelector('.ahg-fallback-error');
-    if (details) details.textContent = message;
+    if (details) details.textContent = error instanceof Error && error.stack ? error.stack : message;
     document.getElementById('ahg-return-menu')?.addEventListener('click', () => window.location.reload());
   });
 }
