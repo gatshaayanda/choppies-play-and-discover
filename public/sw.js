@@ -1,5 +1,5 @@
 // Bump this cache version for each production app release so installed PWAs detect a new worker.
-const CACHE_NAME = 'choppies-play-discover-v1';
+const CACHE_NAME = 'choppies-play-discover-v2';
 const CORE_ASSETS = ['/', '/manifest.webmanifest', '/favicon.svg', '/icons/icon-192.svg', '/icons/icon-512.svg'];
 
 self.addEventListener('install', (event) => {
@@ -22,7 +22,9 @@ self.addEventListener('fetch', (event) => {
     return;
   }
   const destination = request.destination;
-  const cacheable = destination === 'script' || destination === 'style' || destination === 'image' || destination === 'font' || destination === 'audio' || request.url.endsWith('.json') || request.url.endsWith('.webmanifest');
+  const pathname = new URL(request.url).pathname;
+  const assetExtension = /\\.(glb|gltf|bin|ktx2|basis|webp|png|jpe?g|svg|woff2?|json|webmanifest)$/i.test(pathname);
+  const cacheable = destination === 'script' || destination === 'style' || destination === 'image' || destination === 'font' || destination === 'audio' || assetExtension;
   if (!cacheable) return;
   event.respondWith(caches.match(request).then((cached) => cached || fetch(request).then((response) => { if (response.ok) { const copy = response.clone(); void caches.open(CACHE_NAME).then((cache) => cache.put(request, copy)); } return response; })));
 });
