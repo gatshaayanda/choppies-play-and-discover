@@ -1,9 +1,14 @@
 :root {
-  --night: #070b1d;
-  --line: rgba(169,184,214,.22);
-  --muted: #a9b8d6;
-  --teal: #55d6c2;
-  --ink: #f4f7ff;
+  /* Choppies first-redo palette: forest green, warm cream, brand red and harvest yellow. */
+  --night: #102d20;
+  --line: rgba(245, 217, 95, .24);
+  --muted: #c6d2c2;
+  --teal: #f5d95f;
+  --ink: #fff9e9;
+  --choppies-green: #24432c;
+  --choppies-red: #e52f35;
+  --choppies-yellow: #f5d95f;
+  --choppies-cream: #fffdf4;
 }
 
 html,
@@ -18,7 +23,7 @@ body,
 }
 
 html {
-  background: #16120f;
+  background: #102d20;
   overflow: hidden;
 }
 
@@ -280,9 +285,9 @@ canvas {
   flex-direction: column;
   color: var(--ink);
   background:
-    radial-gradient(circle at 78% 18%, rgba(85,214,194,.10), transparent 26rem),
-    radial-gradient(circle at 18% 80%, rgba(226,189,103,.07), transparent 24rem),
-    var(--night);
+    radial-gradient(circle at 78% 18%, rgba(245,217,95,.13), transparent 26rem),
+    radial-gradient(circle at 18% 80%, rgba(229,47,53,.09), transparent 24rem),
+    linear-gradient(145deg, #102d20, #173b29 58%, #0c2419);
 }
 .game-menu-header,
 .game-menu-footer {
@@ -305,20 +310,20 @@ canvas {
 .menu-intro h1 { color: var(--ink); margin: 18px 0 14px; font-size: clamp(44px, 7vw, 82px); line-height: .95; letter-spacing: -.055em; }
 .menu-intro > p:last-child { max-width: 570px; margin: 0; color: var(--muted); font-size: clamp(15px, 2vw, 18px); line-height: 1.65; }
 .menu-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 52px; }
-.menu-card { display: grid; grid-template-columns: 150px minmax(0, 1fr); border: 1px solid var(--line); background: rgba(16,23,45,.72); overflow: hidden; }
-.menu-card-art { min-height: 270px; display: flex; align-items: flex-end; padding: 18px; background: radial-gradient(circle at 72% 30%, rgba(85,214,194,.20), transparent 35%), linear-gradient(145deg, #111d3d, #07101e); }
-.menu-card-art span { color: rgba(244,247,255,.16); font: 800 64px/1 monospace; }
+.menu-card { display: grid; grid-template-columns: 150px minmax(0, 1fr); border: 1px solid var(--line); background: rgba(26, 62, 41, .88); overflow: hidden; }
+.menu-card-art { min-height: 270px; display: flex; align-items: flex-end; padding: 18px; background: radial-gradient(circle at 72% 30%, rgba(245,217,95,.24), transparent 35%), radial-gradient(circle at 20% 80%, rgba(229,47,53,.15), transparent 45%), linear-gradient(145deg, #315a39, #102d20); }
+.menu-card-art span { color: rgba(255,249,233,.22); font: 800 64px/1 monospace; }
 .menu-card-content { color: var(--ink); padding: 28px; display: flex; flex-direction: column; justify-content: center; }
-.menu-card-meta { display: flex; justify-content: space-between; gap: 12px; color: var(--teal); font: 800 8px/1.3 monospace; letter-spacing: 1.1px; }
-.menu-card-meta span:last-child { color: rgba(169,184,214,.7); }
+.menu-card-meta { display: flex; justify-content: space-between; gap: 12px; color: var(--choppies-yellow); font: 800 8px/1.3 monospace; letter-spacing: 1.1px; }
+.menu-card-meta span:last-child { color: rgba(198,210,194,.7); }
 .menu-card h2 { color: var(--ink); margin: 18px 0 10px; font-size: clamp(30px, 4vw, 42px); letter-spacing: -.04em; }
 .menu-card p { margin: 0; color: var(--muted); line-height: 1.6; font-size: 14px; }
-.menu-play { color: #07151a; align-self: flex-start; margin-top: 26px; min-height: 48px; padding: 0 18px; border: 1px solid var(--teal); background: var(--teal); color: #07151a; cursor: pointer; font: 800 10px/1 monospace; letter-spacing: 1.1px; }
+.menu-play { align-self: flex-start; margin-top: 26px; min-height: 48px; padding: 0 18px; border: 1px solid var(--choppies-red); border-radius: 4px; background: var(--choppies-red); color: #fffdf4; cursor: pointer; font: 900 10px/1 monospace; letter-spacing: 1.1px; }
 .menu-play span { margin-left: 10px; }
 .menu-disabled { margin-top: 26px; color: rgba(169,184,214,.55); font: 800 9px/1 monospace; letter-spacing: 1px; }
 .game-menu-footer { padding: 18px 0; border-top: 1px solid var(--line); }
 .ahg-fallback { min-height: 100svh; display: grid; place-content: center; gap: 18px; text-align: center; background: var(--night); color: var(--ink); font: 800 12px/1.5 monospace; }
-.ahg-fallback button { min-height: 48px; border: 1px solid var(--teal); background: var(--teal); color: #07151a; cursor: pointer; font: 800 10px/1 monospace; letter-spacing: 1px; }
+.ahg-fallback button { min-height: 48px; border: 1px solid var(--choppies-yellow); background: var(--choppies-yellow); color: #173b29; cursor: pointer; font: 800 10px/1 monospace; letter-spacing: 1px; }
 @media (max-width: 700px) {
   .game-menu-header, .game-menu-footer, .game-menu-main { width: min(100% - 28px, 1180px); }
   .game-menu-header { padding: 18px 0; }
