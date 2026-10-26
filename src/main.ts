@@ -78,12 +78,16 @@ function startHall() {
     (window as Window & { __AHG_GAME__?: unknown }).__AHG_GAME__ = game;
   };
 
-  void boot().catch(() => {
+  void boot().catch((error: unknown) => {
+    console.error('[Choppies] Startup failed:', error);
     const app = document.getElementById('app');
     if (!app) return;
-    app.innerHTML = '<main class="ahg-fallback"><p>CHOPPIES PLAY & DISCOVER COULD NOT START.</p><button type="button" id="ahg-return-menu">BACK TO GAMES</button></main>';
+    const message = error instanceof Error ? `${error.name}: ${error.message}` : String(error);
+    app.innerHTML = `<main class="ahg-fallback"><p>CHOPPIES PLAY & DISCOVER COULD NOT START.</p><pre class="ahg-fallback-error"></pre><button type="button" id="ahg-return-menu">RETRY</button></main>`;
+    const details = app.querySelector('.ahg-fallback-error');
+    if (details) details.textContent = message;
     document.getElementById('ahg-return-menu')?.addEventListener('click', () => {
-      window.location.href = '/';
+      window.location.reload();
     });
   });
 }
