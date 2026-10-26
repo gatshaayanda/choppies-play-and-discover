@@ -54,13 +54,11 @@ function startHall() {
     const app = document.getElementById('app');
     if (!app) return;
     const message = error instanceof Error ? `${error.name}: ${error.message}` : String(error);
-    app.innerHTML = `<main class="ahg-fallback"><p>CHOPPIES PLAY & DISCOVER COULD NOT START.</p><pre class="ahg-fallback-error"></pre><button type="button" id="ahg-return-menu">RETRY</button></main>`;
+    app.innerHTML = `<main class="ahg-fallback"><p>CHOPPIES PLAY & DISCOVER COULD NOT START.</p><p class="ahg-fallback-help">Startup error details (send this text if the problem repeats):</p><pre class="ahg-fallback-error"></pre><button type="button" id="ahg-return-menu">RETRY</button></main>`;
     const details = app.querySelector('.ahg-fallback-error');
     if (details) details.textContent = message;
     document.getElementById('ahg-return-menu')?.addEventListener('click', () => window.location.reload());
   });
 }
-
-startHall();
 
 startHall();
