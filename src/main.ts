@@ -7,24 +7,12 @@ import { registerPwa } from './pwa';
 registerPwa();
 function startHall() {
   const boot = async () => {
+    // Load only the Choppies experience. Unrelated Admin Hub game chunks must
+    // never prevent the farm from starting.
     const [
       { default: Phaser },
       { BootScene },
       { PublisherIntroScene },
-      { NameEntryScene },
-      { HallIntroScene },
-      { GameShellScene },
-      { PresidentsShoesIntroScene },
-      { PresidentsShoesSetupScene },
-      { PresidentsShoesGameScene },
-      { ShootersTriggerIntroScene },
-      { ShootersTriggerSetupScene },
-      { ShootersTriggerTrainingScene },
-      { ShootersTriggerLobbyScene },
-      { ShootersTriggerMediaScene },
-      { ShootersTriggerArenaScene },
-      { ShootersTriggerOnlineScene },
-      { WardrobeIntroScene, WardrobeLabScene },
       { LivingWorldIntroScene },
       { LivingWorldSetupScene },
       { LivingWorldGameScene },
@@ -32,34 +20,17 @@ function startHall() {
       import('phaser'),
       import('./scenes/BootScene'),
       import('./scenes/PublisherIntroScene'),
-      import('./scenes/NameEntryScene'),
-      import('./scenes/HallIntroScene'),
-      import('./scenes/GameShellScene'),
-      import('./scenes/PresidentsShoesIntroScene'),
-      import('./scenes/PresidentsShoesSetupScene'),
-      import('./scenes/PresidentsShoesGameScene'),
-      import('./scenes/ShootersTriggerIntroScene'),
-      import('./scenes/ShootersTriggerSetupScene'),
-      import('./scenes/ShootersTriggerTrainingScene'),
-      import('./scenes/ShootersTriggerLobbyScene'),
-      import('./scenes/ShootersTriggerMediaScene'),
-      import('./scenes/ShootersTriggerArenaScene'),
-      import('./scenes/ShootersTriggerOnlineScene'),
-      import('./scenes/WardrobeIntroScene'),
       import('./scenes/LivingWorldIntroScene'),
       import('./scenes/LivingWorldSetupScene'),
       import('./scenes/LivingWorldGameScene'),
     ]);
 
-
     const config: Phaser.Types.Core.GameConfig = {
-      type: (window.matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0)
-        ? Phaser.CANVAS
-        : Phaser.AUTO,
+      type: Phaser.AUTO,
       parent: 'app',
       width: 960,
       height: 540,
-      backgroundColor: '#16120f',
+      backgroundColor: '#1e402b',
       input: { activePointers: 3 },
       dom: { createContainer: true },
       scale: {
@@ -71,7 +42,7 @@ function startHall() {
         min: { width: 320, height: 180 },
         max: { width: 0, height: 0 },
       },
-      scene: [BootScene, PublisherIntroScene, NameEntryScene, HallIntroScene, GameShellScene, PresidentsShoesIntroScene, PresidentsShoesSetupScene, PresidentsShoesGameScene, ShootersTriggerIntroScene, ShootersTriggerSetupScene, ShootersTriggerTrainingScene, ShootersTriggerLobbyScene, ShootersTriggerMediaScene, ShootersTriggerArenaScene, ShootersTriggerOnlineScene, WardrobeIntroScene, WardrobeLabScene, LivingWorldIntroScene, LivingWorldSetupScene, LivingWorldGameScene],
+      scene: [BootScene, PublisherIntroScene, LivingWorldIntroScene, LivingWorldSetupScene, LivingWorldGameScene],
     };
 
     const game = new Phaser.Game(config);
@@ -86,10 +57,10 @@ function startHall() {
     app.innerHTML = `<main class="ahg-fallback"><p>CHOPPIES PLAY & DISCOVER COULD NOT START.</p><pre class="ahg-fallback-error"></pre><button type="button" id="ahg-return-menu">RETRY</button></main>`;
     const details = app.querySelector('.ahg-fallback-error');
     if (details) details.textContent = message;
-    document.getElementById('ahg-return-menu')?.addEventListener('click', () => {
-      window.location.reload();
-    });
+    document.getElementById('ahg-return-menu')?.addEventListener('click', () => window.location.reload());
   });
 }
+
+startHall();
 
 startHall();
