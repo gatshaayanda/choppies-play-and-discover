@@ -15,7 +15,8 @@ This is a Choppies-branded gaming and discovery portal, not a shopping app. The 
 ## Important limitations — do not misrepresent
 - The farmer is still a procedural 3D model, not a validated authored farmer character asset.
 - The horse uses the actual committed GLB, but an authored rider model and riding animation have not been verified. The current mount interaction is a prototype.
-- Watering, harvesting and feeding are prototype interactions. Inventory, real crop growth stages, animal needs/autonomy, missions, world simulation, offline elapsed-time progression and a return report are not yet implemented in Farm World.
+- Farm World progress now saves locally with a versioned, validated save: score, watered crop rows, harvested rows/basket count and animals fed survive refresh. Malformed/unsupported saves recover to a clean state. Each row can be watered once, must be watered before harvest, and cannot be harvested repeatedly for points.
+- This is not yet a full simulation: crop growth stages, animal needs/autonomy, missions, bounded offline elapsed-time progression and a return report are not yet implemented.
 - Asset placement, camera feel, horse scale/riding pose, browser startup and installability still require real-device QA. A successful build does not prove these.
 
 ## Verification / QA
@@ -29,8 +30,8 @@ This is a Choppies-branded gaming and discovery portal, not a shopping app. The 
 8. Confirm the service worker updates the shell and does not strand the user on stale cached code.
 
 ## Next roadmap slices
-1. Stabilize and device-verify the Choppies startup and current playthrough.
+1. Device-verify the Choppies startup, farmer selection, current farm playthrough and install experience.
 2. Audit and validate the actual farmer/horse/animal asset archives, including animation clips and licences; replace the procedural farmer only with a suitable validated asset.
-3. Implement a versioned local save and deterministic farm state: crops, harvest basket, animal needs, farm resources and bounded elapsed-time progression.
+3. Extend the versioned local save into deterministic farm state: crop growth stages, animal needs, farm resources and bounded elapsed-time progression.
 4. Add readable goals/progression and a return report only after the simulation/save tests pass.
 5. Harden offline caching for required models and textures and test installed-PWA offline relaunch.
