@@ -16,7 +16,7 @@ export class PublisherIntroScene extends Phaser.Scene {
     adminHubAudio.start();
 
     const { width, height } = this.scale;
-    this.cameras.main.setBackgroundColor('#1e402b');
+    this.cameras.main.setBackgroundColor('#102d20');
     this.drawWorld(width, height);
     this.scale.on(Phaser.Scale.Events.RESIZE, this.handleResize, this);
 
@@ -29,7 +29,7 @@ export class PublisherIntroScene extends Phaser.Scene {
       fontFamily: 'monospace',
       fontSize: '12px',
       fontStyle: 'bold',
-      color: '#f7d84d',
+      color: '#f5d95f',
       letterSpacing: 2.5,
     }).setDepth(30);
 
@@ -41,7 +41,7 @@ export class PublisherIntroScene extends Phaser.Scene {
     this.input.on('pointerdown', skip);
     this.input.keyboard?.on('keydown', skip);
 
-    const fade = this.add.rectangle(0, 0, width, height, 0x1e402b, 1)
+    const fade = this.add.rectangle(0, 0, width, height, 0x102d20, 1)
       .setOrigin(0)
       .setDepth(100);
 
@@ -94,7 +94,7 @@ export class PublisherIntroScene extends Phaser.Scene {
     const panelWidth = Math.min(width * 0.82, 720);
     const panelHeight = Math.min(height * 0.38, 210);
     const panel = this.add.rectangle(width / 2, height * 0.48, panelWidth, panelHeight, 0x24432c, 0.96)
-      .setStrokeStyle(Math.max(2, Math.min(width, height) * 0.004), 0xf7d84d, 0.95)
+      .setStrokeStyle(Math.max(2, Math.min(width, height) * 0.004), 0xf5d95f, 0.95)
       .setDepth(81)
       .setAlpha(0)
       .setScale(0.94);
@@ -106,7 +106,7 @@ export class PublisherIntroScene extends Phaser.Scene {
       fontFamily: 'monospace',
       fontSize: `${titleSize}px`,
       fontStyle: 'bold',
-      color: '#f4f7ff',
+      color: '#fff9e9',
       letterSpacing: Math.max(2, Math.round(titleSize * 0.06)),
       align: 'center',
     }).setOrigin(0.5).setDepth(82).setAlpha(0).setScale(0.96);
