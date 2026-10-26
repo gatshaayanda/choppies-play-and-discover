@@ -23,7 +23,7 @@ self.addEventListener('fetch', (event) => {
   }
   const destination = request.destination;
   const pathname = new URL(request.url).pathname;
-  const assetExtension = /\\.(glb|gltf|bin|ktx2|basis|webp|png|jpe?g|svg|woff2?|json|webmanifest)$/i.test(pathname);
+  const assetExtension = /\.(glb|gltf|bin|ktx2|basis|webp|png|jpe?g|svg|woff2?|json|webmanifest)$/i.test(pathname);
   const cacheable = destination === 'script' || destination === 'style' || destination === 'image' || destination === 'font' || destination === 'audio' || assetExtension;
   if (!cacheable) return;
   event.respondWith(caches.match(request).then((cached) => cached || fetch(request).then((response) => { if (response.ok) { const copy = response.clone(); void caches.open(CACHE_NAME).then((cache) => cache.put(request, copy)); } return response; })));
