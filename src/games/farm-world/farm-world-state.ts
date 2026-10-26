@@ -125,7 +125,7 @@ export function advanceFarmWorld(state: FarmWorldState, now: number): FarmWorldS
     }
     if (dayInSeason === 0 && next.totalGameDays > 0) newEvents.push('The farm season has turned.');
   }
-  next.lastSimulatedAt = state.lastSimulatedAt + elapsed;
+  next.lastSimulatedAt = now;
   next.events = [...next.events, ...newEvents].slice(-20);
   next.returnReport = [...new Set(newEvents)].slice(-4);
   return next;
@@ -135,6 +135,7 @@ export function waterCrop(state: FarmWorldState, id: string): { state: FarmWorld
   if (state.waterReserve < 10) return { state, message: 'The water reserve is low. Wait for rain before watering again.' };
   const existing = state.crops[id];
   if (existing?.stage === 'ready') return { state, message: 'This row is ready to harvest.' };
+  if (existing?.stage === 'harvested') return { state, message: 'This row has already been harvested. Try another crop row.' };
   if (existing?.stage === 'sprout' || existing?.stage === 'growing') return { state, message: 'This row is growing already. Give it time to mature.' };
   const crops = { ...state.crops, [id]: { stage: 'sprout' as const, moisture: 100, growthDays: 0 } };
   return { state: { ...state, crops, waterReserve: bounded(state.waterReserve - 10) }, message: 'Crop planted and watered. It needs time and moisture to mature.' };
@@ -158,13 +159,13 @@ export function waterAnimal(state: FarmWorldState, id: string): FarmWorldState {
   return { ...state, waterReserve: bounded(state.waterReserve - 5), animals: { ...state.animals, [id]: { ...animal, thirst: 5, trust: bounded(animal.trust + 2) } } };
 }
 
-export function saveFarmWorldState(state: FarmWorldState, storage: Pick<Storage, 'setItem'> = window.localStorage): void {
-  try { storage.setItem(FARM_WORLD_STATE_KEY, JSON.stringify(state)); } catch { /* Keep play available when storage is full. */ }
+export function saveFarmWorldState(state: FarmWorldState, storage?: Pick<Storage, 'setItem'>): void {
+  try { const target = storage ?? window.localStorage; target.setItem(FARM_WORLD_STATE_KEY, JSON.stringify(state)); } catch { /* Keep play available when storage is full. */ }
 }
 
-export function loadFarmWorldState(now = Date.now(), storage: Pick<Storage, 'getItem' | 'setItem'> = window.localStorage): FarmWorldState {
+export function loadFarmWorldState(now = Date.now(), storage?: Pick<Storage, 'getItem' | 'setItem'>): FarmWorldState {
   let raw: string | null = null;
-  try { raw = storage.getItem(FARM_WORLD_STATE_KEY); } catch { /* private mode or disabled storage */ }
+  try { const target = storage ?? window.localStorage; raw = target.getItem(FARM_WORLD_STATE_KEY); } catch { /* private mode or disabled storage */ }
   const parsed = parseFarmWorldState(raw, now);
   const advanced = advanceFarmWorld(parsed, now);
   saveFarmWorldState(advanced, storage);
