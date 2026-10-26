@@ -34,7 +34,7 @@ export class PublisherIntroScene extends Phaser.Scene {
     }).setDepth(30);
 
     const skipHint = this.add.text(width * 0.925, height * 0.90, 'TAP TO ENTER', {
-      fontFamily: 'monospace', fontSize: '10px', fontStyle: 'bold', color: '#a9b8d6', letterSpacing: 1.5,
+      fontFamily: 'monospace', fontSize: '10px', fontStyle: 'bold', color: '#d7dfd0', letterSpacing: 1.5,
     }).setOrigin(1, 0.5).setAlpha(0).setDepth(90);
 
     const skip = () => this.skipIntro();
@@ -87,13 +87,13 @@ export class PublisherIntroScene extends Phaser.Scene {
   private showPublisherCard(ambientBrand: Phaser.GameObjects.Text, width: number, height: number) {
     if (this.leaving) return;
 
-    const veil = this.add.rectangle(width / 2, height / 2, width, height, 0x16120f, 0.32)
+    const veil = this.add.rectangle(width / 2, height / 2, width, height, 0x102d20, 0.38)
       .setDepth(80)
       .setAlpha(0);
 
     const panelWidth = Math.min(width * 0.82, 720);
     const panelHeight = Math.min(height * 0.38, 210);
-    const panel = this.add.rectangle(width / 2, height * 0.48, panelWidth, panelHeight, 0x10172d, 0.92)
+    const panel = this.add.rectangle(width / 2, height * 0.48, panelWidth, panelHeight, 0x24432c, 0.96)
       .setStrokeStyle(Math.max(2, Math.min(width, height) * 0.004), 0xf7d84d, 0.95)
       .setDepth(81)
       .setAlpha(0)
@@ -114,7 +114,7 @@ export class PublisherIntroScene extends Phaser.Scene {
     const presents = this.add.text(width / 2, height * 0.575, 'presents', {
       fontFamily: 'sans-serif',
       fontSize: `${presentsSize}px`,
-      color: '#e2bd67',
+      color: '#f5d95f',
       fontStyle: 'italic',
       align: 'center',
     }).setOrigin(0.5).setDepth(82).setAlpha(0);
@@ -123,7 +123,7 @@ export class PublisherIntroScene extends Phaser.Scene {
     const descriptor = this.add.text(width / 2, height * 0.635, 'BUILD  ·  PLAY  ·  RETURN', {
       fontFamily: 'monospace',
       fontSize: `${Math.max(9, Math.min(12, Math.min(width, height) * 0.018))}px`,
-      color: '#a9b8d6',
+      color: '#d7dfd0',
       letterSpacing: 2,
       align: 'center',
     }).setOrigin(0.5).setDepth(82).setAlpha(0);
@@ -188,9 +188,9 @@ export class PublisherIntroScene extends Phaser.Scene {
   private drawWorld(width: number, height: number) {
     const g = this.add.graphics();
 
-    g.fillStyle(0x070b1d, 1).fillRect(0, 0, width, height);
-    g.fillStyle(0x111a42, 1).fillRect(0, height * 0.30, width, height * 0.40);
-    g.fillStyle(0x0d1830, 1).fillRect(0, height * 0.70, width, height * 0.30);
+    g.fillStyle(0x102d20, 1).fillRect(0, 0, width, height);
+    g.fillStyle(0x173b29, 1).fillRect(0, height * 0.30, width, height * 0.40);
+    g.fillStyle(0x0c2419, 1).fillRect(0, height * 0.70, width, height * 0.30);
 
     // Publisher-world starfield: this identity belongs to Admin Hub Games, not to any one game's biome.
     for (let i = 0; i < 64; i += 1) {
