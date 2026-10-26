@@ -170,7 +170,7 @@ export class FarmWorldExperience {
     const crop=this.worldState.crops[id];
     if(!object||!crop)return;
     const base=(object.userData.baseScale as [number,number,number]|undefined)??[.9,.9,.9];
-    const factor=crop.stage==='sprout'?.68:crop.stage==='growing'?.86:crop.stage==='ready'?1.12:.48;
+    const factor=crop.stage === 'sprout' ? 0.68 : crop.stage === 'growing' ? 0.86 : crop.stage === 'ready' ? 1.12 : 0.48;
     object.scale.set(base[0]*factor,base[1]*factor,base[2]*factor);
   }
   private persistFarmProgress(){
