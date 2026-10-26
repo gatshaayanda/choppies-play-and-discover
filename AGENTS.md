@@ -1,12 +1,38 @@
-# AGENTS.md — Admin Hub Games
+# AGENTS.md — Choppies Play & Discover
 
-## Identity
-**Project:** Admin Hub Games  
-**Repository:** `gatshaayanda/admin-hub-games`  
-**Owner:** Ayanda Gatsha / Admin Hub  
-**Role:** canonical game portal and reusable foundation for Admin Hub Games.
+## Project identity and owner-approved direction
+**Project:** Choppies Play & Discover  
+**Repository:** `gatshaayanda/choppies-play-and-discover`  
+**Owner:** Ayanda Gatsha (product owner and final reviewer)  
+**Product:** A Choppies-branded gaming/discovery portal, not a shopping or ordering app.
 
-This repository contains the Admin Hub Games publisher shell and the games that actually exist here. Do not add placeholder games or describe planned/unimplemented titles as built.
+This repository began from the Admin Hub Games foundation. Its inherited implementation is a technical base, not the product brief. Follow the Choppies-specific rules below first; inherited foundation rules later in this document apply only when they do not conflict.
+
+### Required player journey
+```
+Choppies Play & Discover
+  → Choppies-branded publisher intro
+  → focused game library
+  → choose Boy farmer or Girl farmer
+  → Choppies Farm World
+  → explore and move around the farm
+  → interact with actual farm assets, crops and livestock
+  → ride the horse when reached
+```
+
+### Non-negotiable scope
+- **Never present Paws World as the Choppies game.** The current playable direction is Choppies Farm World.
+- Boy/Girl selection must be available before entering the farm, and the selected choice must affect the player presentation and persist locally.
+- Use the actual committed farm assets: barn, tractor, crop rows, fences, farm equipment and livestock. Use the committed horse GLB for the horse interaction; do not claim authored rider animation when none exists.
+- The game must be mobile-first with a usable touch joystick and thumb-sized actions; keyboard movement remains available where applicable.
+- Build actual playable interactions, not just Choppies branding over an unrelated game. Clearly distinguish implemented gameplay from planned features.
+- Preserve the approved Phaser/Vite foundation and the PWA installation/update/offline mechanisms. The install card is platform-level, must not gate gameplay, must only call the native install prompt after a user tap, and must not fake a native prompt when the browser provides no install event. Keep iOS Add to Home Screen guidance and embedded-browser guidance.
+- Keep Choppies identity in visible copy, metadata, package identity, manifest, icons and cache namespace. Never use Admin Hub Games or Paws branding in the customer-facing Choppies experience.
+- Avoid unrelated game imports blocking Choppies startup. A failure must expose its actual diagnostic instead of silently presenting only a generic startup message.
+- Local-first behavior; no new Firebase/server infrastructure unless the owner explicitly requires it.
+
+### Delivery contract
+Inspect the actual repository and the latest owner-provided Choppies brief/roadmap. Implement in place, run tests/build, fix the first failure, verify the relevant workflow, checkpoint on `main`, and report the real commit and deployment state separately. A green build does not prove browser/device QA. Do not claim a working production flow until it has been verified.
 
 ## Source of Truth & Workflow
 - GitHub is the source of truth.
